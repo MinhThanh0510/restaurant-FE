@@ -1,0 +1,112 @@
+/* ===== NAVBAR ===== */
+.navbar {
+  position: sticky;
+  top: 0;
+  background: #6b0000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 80px; /* Căn lề rộng rãi hơn */
+  color: white;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== LOGO ===== */
+.logo {
+  font-family: 'Playfair Display', serif; /* Font sang trọng cho logo */
+  font-size: 26px;
+  font-weight: 700;
+  color: #D4AF37;
+  letter-spacing: 1px;
+}
+
+/* ===== NAV ===== */
+.navbar nav {
+  display: flex;
+  gap: 40px; /* Tăng khoảng cách menu */
+}
+
+/* ===== LINKS ===== */
+.navbar a {
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px; /* Chữ to rõ ràng */
+  transition: 0.3s;
+  position: relative;
+  padding: 5px 0;
+  font-family: 'Inter', sans-serif;
+}
+
+.navbar a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #D4AF37;
+  transition: 0.3s;
+}
+
+.navbar a:hover {
+  color: #D4AF37;
+}
+
+.navbar a:hover::after {
+  width: 100%;
+}
+
+/* ===== AUTH AREA ===== */
+.auth {
+  display: flex;
+  align-items: center;
+}
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  border-radius: 50px;
+  padding: 6px 16px 6px 6px;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #D4AF37, #b38f2e);
+  color: black;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.user-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+.logout-btn {
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  padding-left: 12px;
+  color: #ff4d4f;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.logout-btn:hover {
+  color: #ff7875;
+}
