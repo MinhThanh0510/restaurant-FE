@@ -74,53 +74,46 @@
   margin-left: 2px;
 }
 
-/* ===== PASSWORD WRAPPER (Để chứa icon con mắt) ===== */
+/* ===== PASSWORD WRAPPER ===== */
 .password-wrapper {
   position: relative;
   display: flex;
   align-items: center;
 }
 
+/* ======================================================= */
+/* ===== CHUẨN HÓA INPUT (MẶC ĐỊNH & KHI FOCUS) ===== */
+/* ======================================================= */
+
+/* Mặc định chưa click */
+.input-group > input,
 .password-wrapper input {
-  width: 100%;
-  height: 48px;
-  padding: 0 45px 0 16px; /* Chừa chỗ bên phải cho con mắt */
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
-  font-size: 14.5px;
-  transition: 0.3s;
-  box-sizing: border-box;
-}
-
-.password-wrapper input:focus {
-  outline: none;
-  border-color: #D4AF37;
-  background: rgba(0, 0, 0, 0.6);
-  box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
-}
-
-/* Các input bình thường khác (Email, Tên...) */
-.input-group > input {
   width: 100%;
   height: 48px;
   padding: 0 16px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
+  background: rgba(255, 255, 255, 0.05) !important; /* Ép nền đen mờ */
+  color: white !important;
   font-size: 14.5px;
   transition: 0.3s;
   box-sizing: border-box;
 }
 
-.input-group > input:focus {
-  outline: none;
-  border-color: #D4AF37;
-  background: rgba(0, 0, 0, 0.6);
-  box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
+/* Chừa chỗ cho icon mắt */
+.password-wrapper input {
+  padding-right: 45px;
 }
+
+/* Khi click vào (:focus) - Cần bọc thép !important */
+.input-group > input:focus,
+.password-wrapper input:focus {
+  outline: none;
+  border-color: #D4AF37 !important;
+  background: rgba(0, 0, 0, 0.7) !important; /* Ép nền khi click */
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.4) !important;
+}
+
 
 /* ===== ICON CON MẮT ===== */
 .toggle-password {
@@ -142,7 +135,7 @@
 
 .toggle-password:hover {
   color: #D4AF37;
-  background: transparent !important; /* Tránh viền hover mặc định của button */
+  background: transparent !important;
 }
 
 .toggle-password svg {

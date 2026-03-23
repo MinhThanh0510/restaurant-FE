@@ -101,7 +101,7 @@ function Home() {
               <div className="featured-card-content">
                 <h4>{item.name}</h4>
                 <p>{item.description}</p>
-                <span className="featured-price">{item.price.toLocaleString()} VND</span>
+                <span className="featured-price">{item.price.toLocaleString()} $</span>
               </div>
             </div>
           ))}

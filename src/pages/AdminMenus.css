@@ -1,0 +1,303 @@
+/* ===== TABS & HEADER ===== */
+.admin-menus-wrapper {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.admin-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-header-flex h3 {
+  color: #2c3e50;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #888;
+  cursor: pointer;
+  position: relative;
+  transition: 0.3s;
+}
+
+.tab-btn:hover { color: #D4AF37; }
+
+.tab-btn.active {
+  color: #D4AF37;
+}
+
+.tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #D4AF37;
+  border-radius: 3px 3px 0 0;
+}
+
+/* ===== TAB ACTIONS ===== */
+.tab-actions {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.btn-primary {
+  background: #D4AF37;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-primary:hover { background: #b38f2e; }
+
+.btn-secondary {
+  background: #f1f2f6;
+  color: #555;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-secondary:hover { background: #e2e4e9; }
+
+/* ===== TABLE STYLES ===== */
+.menu-thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.action-buttons-sm {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  background: transparent;
+  border: 1px solid #ddd;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+.btn-icon.edit:hover { background: #f8f9fa; border-color: #007bff; color: #007bff; }
+.btn-icon.delete:hover { background: #fcf0f0; border-color: #dc3545; color: #dc3545; }
+
+/* ===== MODAL FORM STYLES ===== */
+.admin-modal-content.large {
+  max-width: 700px;
+}
+
+.modal-body-form {
+  padding: 25px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.input-group { margin-bottom: 18px; }
+.input-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 8px;
+}
+.req { color: #dc3545; }
+
+/* 🔥 ÉP CHỮ MÀU ĐEN CHO CÁC Ô NHẬP LIỆU */
+.input-group input[type="text"],
+.input-group input[type="number"],
+.input-group select,
+.input-group textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  background: #fafafa;
+  transition: 0.2s;
+  box-sizing: border-box;
+  color: #333 !important; /* Thêm dòng này: Ép chữ màu xám đen */
+}
+
+.input-group input:focus {
+  border-color: #D4AF37;
+  background: white;
+  color: white !important; /* Chữ vẫn đen khi focus */
+}
+
+.input-group select:focus {
+    border-color: #D4AF37;
+  background: white;
+  color: #333 !important; /* Chữ vẫn đen khi focus */
+}
+
+.input-group textarea:focus {
+    border-color: #D4AF37;
+  background: white;
+  color: #333 !important; /* Chữ vẫn đen khi focus */
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: normal;
+  color: #333; /* Ép màu đen cho chữ ở checkbox */
+}
+
+/* 🔥 ÉP CHỮ MÀU ĐEN CHO Ô NHẬP NGUYÊN LIỆU */
+.ingredient-row select { 
+  flex: 2; padding: 10px; border-radius: 6px; border: 1px solid #ddd; 
+  color: #333 !important; 
+  background: #fafafa;
+}
+.ingredient-row input { 
+  flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ddd; 
+  color: #333 !important; 
+  background: #fafafa;
+}
+
+
+/* ======================================================= */
+/* 🔥 TRỊ LỖI AUTOFILL BỊ ĐEN Ô INPUT Ở TRANG ADMIN SÁNG    */
+/* ======================================================= */
+.admin-modal-content input:-webkit-autofill,
+.admin-modal-content input:-webkit-autofill:hover, 
+.admin-modal-content input:-webkit-autofill:focus, 
+.admin-modal-content input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #fafafa inset !important; /* Nền xám nhạt */
+  -webkit-text-fill-color: #333 !important; /* Chữ màu xám đen */
+  caret-color: #333 !important; /* Con trỏ chuột đen */
+  border: 1px solid #ddd !important;
+}
+
+.admin-modal-content input:-webkit-autofill:focus {
+  border-color: #D4AF37 !important;
+}
+
+/* ===== INGREDIENTS DYNAMIC FORM ===== */
+.ingredients-section {
+  background: #f8f9fa;
+  border: 1px dashed #ccc;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.ingredients-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.ingredients-header label { font-weight: 600; color: #333; margin: 0; font-size: 14px;}
+
+.btn-add-ing {
+  background: white;
+  color: #007bff;
+  border: 1px solid #007bff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+.btn-add-ing:hover { background: #007bff; color: white; }
+
+.empty-ing { font-size: 13.5px; color: #888; font-style: italic; margin: 0; }
+
+.ingredients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ingredient-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.ingredient-row select { flex: 2; padding: 10px; border-radius: 6px; border: 1px solid #ddd; }
+.ingredient-row input { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ddd; }
+
+.btn-remove-ing {
+  background: #ffeeee;
+  color: #dc3545;
+  border: 1px solid #ffcccc;
+  border-radius: 6px;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-remove-ing:hover { background: #dc3545; color: white; }
+
+/* MODAL FOOTER BUTTONS */
+.btn-submit-form {
+  background: #D4AF37;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
+.btn-cancel {
+  background: transparent;
+  color: #555;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* 🔥 ẨN MŨI TÊN TĂNG GIẢM TRÊN Ô INPUT NUMBER */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
