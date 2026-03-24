@@ -42,19 +42,33 @@
   min-width: 250px;
 }
 
+.btn-reset, .btn-refresh {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 14px;
+}
+
 .btn-reset {
-  padding: 10px 15px;
   background: #f1f2f6;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
   color: #555;
-  transition: 0.2s;
 }
 
 .btn-reset:hover {
   background: #e2e4e9;
+}
+
+.btn-refresh {
+  background: #D4AF37;
+  border: 1px solid #D4AF37;
+  color: white;
+}
+
+.btn-refresh:hover {
+  background: #b38f2e;
 }
 
 /* ===== BẢNG DỮ LIỆU ===== */
@@ -87,42 +101,25 @@
 }
 
 .table-row:hover {
-  background: #fcfdfd;
+  background: #fffdf7; /* Highlight màu vàng nhạt khi hover */
 }
 
-.text-gold {
-  color: #cda434;
-}
-
-.font-bold {
-  font-weight: bold;
-}
-
-.cust-name {
-  font-weight: 600;
-  color: #333;
-}
-
-.cust-phone, .res-date {
-  font-size: 12px;
-  color: #888;
-  margin-top: 3px;
-}
-
-.res-time {
-  font-weight: 600;
-  color: #2c3e50;
-}
+.text-gold { color: #cda434; }
+.font-bold { font-weight: bold; }
+.cust-name { font-weight: 600; color: #333; }
+.cust-phone, .res-date { font-size: 12px; color: #888; margin-top: 3px; }
+.res-time { font-weight: 600; color: #2c3e50; }
 
 /* ===== STATUS BADGES ===== */
 .status-badge {
   padding: 6px 12px;
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   display: inline-block;
 }
+
 .status-pending { background: #fff3cd; color: #856404; }
 .status-confirmed { background: #d1ecf1; color: #0c5460; }
 .status-completed { background: #d4edda; color: #155724; }
@@ -179,10 +176,7 @@
   background: #fafafa;
 }
 
-.modal-header h2 {
-  margin: 0;
-  font-size: 20px;
-}
+.modal-header h2 { margin: 0; font-size: 20px; }
 
 .btn-close-modal {
   background: none;
@@ -190,6 +184,7 @@
   font-size: 24px;
   cursor: pointer;
   color: #888;
+  transition: 0.2s;
 }
 
 .btn-close-modal:hover { color: #dc3545; }
@@ -198,7 +193,7 @@
   padding: 25px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 30px;
+  gap: 25px;
   overflow-y: auto;
 }
 
@@ -215,12 +210,7 @@
   border-bottom: 2px solid #D4AF37;
   padding-bottom: 8px;
   display: inline-block;
-}
-
-.info-section p {
-  margin: 8px 0;
-  font-size: 14.5px;
-  color: #444;
+  font-size: 16px;
 }
 
 .divider {
@@ -229,19 +219,16 @@
   margin: 15px 0;
 }
 
-.note-text {
-  color: #dc3545;
-  font-style: italic;
-}
+.note-text { color: #dc3545; font-style: italic; }
 
-/* Preorder List in Modal */
+/* Preorder List */
 .modal-preorder-list {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .modal-preorder-item {
@@ -255,33 +242,34 @@
 }
 
 .modal-preorder-item img {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   border-radius: 6px;
   object-fit: cover;
 }
 
-.item-details { flex: 1; display: flex; flex-direction: column; }
-.item-name { font-weight: 600; font-size: 14px; color: #333; }
+.item-details { flex: 1; }
+.item-name { font-weight: 600; font-size: 14px; color: #333; display: block; }
 .item-qty { font-size: 12px; color: #888; }
-.item-price { font-weight: bold; color: #D4AF37; }
+.item-price { font-weight: 700; color: #D4AF37; font-size: 14px; }
 
 .modal-total {
   text-align: right;
   margin-top: 20px;
-  font-size: 16px;
+  font-size: 15px;
   color: #555;
   padding-top: 15px;
   border-top: 1px dashed #ccc;
 }
+
 .modal-total span {
   font-weight: 700;
-  font-size: 20px;
+  font-size: 22px;
   color: #2c3e50;
   margin-left: 10px;
 }
 
-/* Modal Footer Actions */
+/* Modal Footer Action Buttons */
 .modal-footer {
   padding: 20px 25px;
   border-top: 1px solid #eee;
@@ -291,25 +279,20 @@
   background: #fafafa;
 }
 
-.current-status-box {
-  font-size: 14px;
-  color: #555;
-  font-weight: 600;
-}
-
 .action-buttons {
   display: flex;
   gap: 10px;
 }
 
 .btn-action {
-  padding: 10px 18px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 6px;
-  font-weight: bold;
+  border-radius: 8px;
+  font-weight: 700;
   cursor: pointer;
   color: white;
   transition: 0.2s;
+  font-size: 14px;
 }
 
 .btn-action.confirm { background: #17a2b8; }
@@ -321,6 +304,47 @@
 .btn-action.cancel { background: #dc3545; }
 .btn-action.cancel:hover { background: #c82333; }
 
+/* ===== PAGINATION ===== */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 30px;
+  padding: 20px 0;
+}
+
+.page-btn {
+  background: white;
+  border: 1px solid #ddd;
+  color: #555;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #D4AF37;
+  color: #D4AF37;
+}
+
+.page-btn.active {
+  background: #D4AF37;
+  color: white;
+  border-color: #D4AF37;
+  box-shadow: 0 3px 10px rgba(212, 175, 55, 0.3);
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Animations */
 @keyframes slideDown {
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -328,46 +352,4 @@
 
 @media (max-width: 768px) {
   .modal-body { grid-template-columns: 1fr; }
-}
-
-/* ===== PHÂN TRANG (PAGINATION) ===== */
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin-top: 25px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
-}
-
-.page-btn {
-  background: white;
-  border: 1px solid #ddd;
-  color: #555;
-  padding: 8px 14px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.page-btn:hover:not(:disabled) {
-  background: #f1f2f6;
-  border-color: #ccc;
-}
-
-.page-btn.active {
-  background: #D4AF37;
-  color: white;
-  border-color: #D4AF37;
-  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4);
-}
-
-.page-btn:disabled {
-  background: #f9f9f9;
-  color: #bbb;
-  cursor: not-allowed;
-  border-color: #eee;
 }

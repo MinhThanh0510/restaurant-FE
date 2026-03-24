@@ -41,6 +41,7 @@ function MyReservations() {
             const pRes = await api.get(`/preorders/reservation/${r._id}`);
             preorderMap[r._id] = pRes.data.preorder || pRes.data.items || pRes.data || []; 
           } catch (error) {
+            // Do nothing if no preorders
           }
         })
       );
@@ -57,7 +58,6 @@ function MyReservations() {
     fetchData();
   }, []);
 
-  // ====== XỬ LÝ HỦY BÀN ======
   const handleCancel = async (id) => {
     if (window.confirm("Are you sure you want to cancel this reservation?")) {
       try {
@@ -70,7 +70,6 @@ function MyReservations() {
     }
   };
 
-  // ====== XỬ LÝ XÓA BÀN (DELETE) ======
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to permanently delete this cancelled history?")) {
       try {
@@ -83,7 +82,6 @@ function MyReservations() {
     }
   };
 
-  // ====== XỬ LÝ REVIEW ======
   const openReviewModal = (id) => {
     setReviewModal({ isOpen: true, reservationId: id, rating: 5, comment: "" });
   };
@@ -119,7 +117,6 @@ function MyReservations() {
     ));
   };
 
-  // ====== LỌC VÀ SẮP XẾP ======
   const statusPriority = {
     pending: 1,
     confirmed: 2,
@@ -180,7 +177,9 @@ function MyReservations() {
             
             const preorderItems = preorders[res._id] && Array.isArray(preorders[res._id]) ? preorders[res._id] : (preorders[res._id]?.items || []);
             const hasPreorder = preorderItems.length > 0;
-            const calculatedTotal = preorderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            // Tính trực tiếp tiền món ăn phòng trường hợp dữ liệu cũ bị lệch
+            const calculatedTotal = preorderItems.reduce((sum, item) => sum + ((item.price || item.menuId?.price || 0) * item.quantity), 0);
+            const surcharge = res.tablePrice || 0;
 
             return (
               <div key={res._id} className="res-card">
@@ -201,7 +200,10 @@ function MyReservations() {
                   </div>
                   <div className="res-info-item">
                     <span>Table</span>
-                    <p>{res.tableId?.tableNumber ? `Table ${res.tableId.tableNumber}` : "Not Assigned"}</p>
+                    {/* Hiển thị Location */}
+                    <p style={{ textTransform: "capitalize" }}>
+                      {res.tableId?.tableNumber ? `Table ${res.tableId.tableNumber} (${res.tableId.location || "indoor"})` : "Not Assigned"}
+                    </p>
                   </div>
                   <div className="res-info-item">
                     <span>Guests</span>
@@ -213,24 +215,43 @@ function MyReservations() {
                   </div>
                 </div>
 
-                {/* ====== HIỂN THỊ PREORDER ====== */}
-                {hasPreorder && (
+                {/* ====== HIỂN THỊ PREORDER & CHI PHÍ ====== */}
+                {(hasPreorder || surcharge > 0) && (
                   <div className="res-preorder-section">
-                    <h4>Pre-ordered Meals:</h4>
-                    <ul className="preorder-list">
-                      {preorderItems.map((item, index) => (
-                        <li key={index} className="preorder-item">
-                          <img src={item.menuId?.image || "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg"} alt={item.menuId?.name} />
-                          <div className="preorder-info">
-                            <span className="preorder-name">{item.menuId?.name || "Unknown Item"}</span>
-                            <span className="preorder-qty">Qty: {item.quantity}</span>
-                          </div>
-                          <span className="preorder-price">{(item.price * item.quantity).toLocaleString()} VND</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="preorder-total">
-                      Total Meal Cost: <span>{calculatedTotal.toLocaleString()} VND</span>
+                    
+                    {hasPreorder && (
+                      <>
+                        <h4>Pre-ordered Meals:</h4>
+                        <ul className="preorder-list">
+                          {preorderItems.map((item, index) => (
+                            <li key={index} className="preorder-item">
+                              <img src={item.menuId?.image || "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg"} alt={item.menuId?.name} />
+                              <div className="preorder-info">
+                                <span className="preorder-name">{item.menuId?.name || "Unknown Item"}</span>
+                                <span className="preorder-qty">Qty: {item.quantity}</span>
+                              </div>
+                              <span className="preorder-price">{((item.price || item.menuId?.price || 0) * item.quantity).toLocaleString()} $</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    )}
+
+                    {/* Khối Tổng kết chi phí */}
+                    <div style={{ marginTop: "15px", paddingTop: "15px", borderTop: "1px dashed rgba(255, 255, 255, 0.1)", textAlign: "right" }}>
+                      {calculatedTotal > 0 && (
+                        <div style={{ fontSize: "13px", color: "#aaa", marginBottom: "5px" }}>
+                          Meals Total: {calculatedTotal.toLocaleString()} $
+                        </div>
+                      )}
+                      {surcharge > 0 && (
+                        <div style={{ fontSize: "13px", color: "#aaa", marginBottom: "5px" }}>
+                          Table Surcharge: {surcharge.toLocaleString()} $
+                        </div>
+                      )}
+                      <div style={{ fontSize: "15px", color: "#eee", marginTop: "8px" }}>
+                        Grand Total: <span style={{ color: "#D4AF37", fontSize: "20px", fontWeight: "bold", marginLeft: "10px" }}>{(calculatedTotal + surcharge).toLocaleString()} $</span>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -252,7 +273,6 @@ function MyReservations() {
                     <span className="reviewed-badge">✓ Reviewed</span>
                   )}
 
-                  {/* NÚT DELETE CHỈ HIỆN KHI ĐÃ CANCELLED */}
                   {res.status === "cancelled" && (
                     <button className="btn-delete" onClick={() => handleDelete(res._id)}>
                       Delete History

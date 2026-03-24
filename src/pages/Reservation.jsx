@@ -5,7 +5,6 @@ import { useAuth } from "../context/AuthContext";
 import "./Reservation.css";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-// Hình ảnh placeholder đẹp hơn khi món ăn bị thiếu ảnh
 const DEFAULT_FOOD_IMG = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=150&h=150&fit=crop";
 
 function Reservation() {
@@ -15,32 +14,25 @@ function Reservation() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  // ===== TỰ ĐỘNG TÌM BÀN NẾU TỪ TRANG HOME CHUYỂN SANG =====
   const [urlQuery] = useSearchParams();
 
   useEffect(() => {
-    // 1. Lấy data từ URL
     const qDate = urlQuery.get("date");
     const qTime = urlQuery.get("time");
     const qGuests = urlQuery.get("guests");
 
-    // 2. Nếu có đủ data trên URL thì mới chạy
     if (qDate && qTime && qGuests) {
-      
-      // Update form Step 1 để hiển thị đúng những gì khách chọn ngoài Home
       setSearchParams({
         date: qDate,
         time: qTime,
         guests: parseInt(qGuests)
       });
 
-      // 3. Tự động gọi API (Dùng thẳng biến qDate, qTime để tránh delay của State)
       const autoFetchTables = async () => {
         setLoading(true);
         try {
           const res = await api.get(`/tables/available?date=${qDate}&time=${qTime}&guests=${qGuests}`);
           setAvailableTables(res.data.tables);
-          // 4. Tìm xong thì Ép chuyển sang Step 2
           setStep(2); 
         } catch (err) {
           alert("Error finding tables: " + (err.response?.data?.message || err.message));
@@ -53,7 +45,6 @@ function Reservation() {
     }
   }, []);
 
-  // ================= STATE DỮ LIỆU =================
   const [searchParams, setSearchParams] = useState({
     date: "",
     time: "18:00",
@@ -70,8 +61,6 @@ function Reservation() {
   });
 
   const [availableTables, setAvailableTables] = useState([]);
-  
-  // NÂNG CẤP STATE MENU: Lưu cả Category
   const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState("");
   const [cart, setCart] = useState([]);
@@ -86,7 +75,6 @@ function Reservation() {
     }
   };
 
-  // ================= STEP 1: TÌM BÀN TRỐNG =================
   const handleSearchTables = async (e) => {
     e.preventDefault();
     if (!searchParams.date || !searchParams.time) return alert("Please select a date and time!");
@@ -103,22 +91,18 @@ function Reservation() {
     }
   };
 
-  // ================= STEP 2: CHỌN BÀN =================
   const handleSelectTable = (table) => {
     setBookingInfo({ ...bookingInfo, tableId: table._id, selectedTable: table });
     setStep(3);
     fetchMenus();
   };
 
-  // ================= STEP 3: PRE-ORDER =================
   const fetchMenus = async () => {
     try {
       const res = await api.get("/menus");
-      // Dữ liệu API trả về mảng các categories chứa items
       const fetchedData = res.data.data || [];
       setCategories(fetchedData);
       
-      // Chọn mặc định category đầu tiên
       if (fetchedData.length > 0) {
         setActiveCategory(fetchedData[0].categoryId);
       }
@@ -145,9 +129,11 @@ function Reservation() {
     }
   };
 
-  const totalCartAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // 🔥 TÍNH TOÁN TỔNG TIỀN ĐỂ DÙNG CHUNG CHO BƯỚC 3 VÀ BƯỚC 4
+  const totalMealAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const tableSurcharge = bookingInfo.selectedTable?.price || 0;
+  const grandTotal = totalMealAmount + tableSurcharge;
 
-  // ================= STEP 4: SUBMIT ĐẶT BÀN =================
   const handleSubmitReservation = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -188,7 +174,6 @@ function Reservation() {
     }
   };
 
-  // Lấy danh sách món ăn thuộc Category đang được chọn
   const activeMenuData = categories.find(cat => cat.categoryId === activeCategory);
   const displayItems = activeMenuData ? activeMenuData.items : [];
 
@@ -231,7 +216,7 @@ function Reservation() {
             </form>
           )}
 
-          {/* ===== BƯỚC 2: UI BÀN NÂNG CẤP ===== */}
+          {/* ===== BƯỚC 2: CHỌN BÀN (CẬP NHẬT LOCATION & PRICE) ===== */}
           {step === 2 && (
             <div className="step-content">
               <h3>Available Tables at {searchParams.time}</h3>
@@ -240,10 +225,13 @@ function Reservation() {
               ) : (
                 <div className="table-list">
                   {availableTables.map(table => {
-                    // Tự động phân loại bàn
                     let tableType = "Standard";
                     if (table.capacity <= 2) tableType = "Couple Table";
                     else if (table.capacity >= 6) tableType = "Family / Group";
+
+                    // Định dạng hiển thị Location & Price
+                    const locText = table.location === 'window' ? '🪟 Window' : table.location === 'outdoor' ? '🌳 Outdoor' : '🏠 Indoor';
+                    const priceText = table.price > 0 ? `(+${table.price} $)` : "";
 
                     return (
                       <div
@@ -251,7 +239,6 @@ function Reservation() {
                         className={`table-card ${bookingInfo.tableId === table._id ? 'selected' : ''}`}
                         onClick={() => handleSelectTable(table)}
                       >
-                        {/* Icon Bàn (Đồ họa SVG Luxury) */}
                         <svg className="table-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M4 16h16M12 16v6M8 22h8M6 16l-2-6h16l-2 6M7 10V4h10v6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
@@ -259,7 +246,10 @@ function Reservation() {
                         <div className="table-info">
                           <h4>Table {table.tableNumber}</h4>
                           <span className="table-tag">{tableType}</span>
-                          <p>Maximum: <b>{table.capacity}</b> people</p>
+                          <p>Maximum: <b>{table.capacity}</b> pax</p>
+                          <p style={{ marginTop: "6px", color: "#D4AF37", fontWeight: "bold", fontSize: "14px" }}>
+                            {locText} <span style={{fontSize: "13px"}}>{priceText}</span>
+                          </p>
                         </div>
                       </div>
                     )
@@ -267,17 +257,16 @@ function Reservation() {
                 </div>
               )}
               <div className="btn-row" style={{ marginTop: '10px' }}>
-                <button className="btn-outline" onClick={() => setStep(1)}>Quay lại tìm kiếm</button>
+                <button className="btn-outline" onClick={() => setStep(1)}>Go Back</button>
               </div>
             </div>
           )}
 
-          {/* ===== BƯỚC 3: MENU CÓ CATEGORY ===== */}
+          {/* ===== BƯỚC 3: PRE-ORDER ===== */}
           {step === 3 && (
             <div className="step-content">
               <h3>Pre-Order Meals (Optional)</h3>
               
-              {/* Category Tabs */}
               <div className="menu-categories">
                 {categories.map(cat => (
                   <button
@@ -292,7 +281,6 @@ function Reservation() {
               </div>
 
               <div className="menu-layout">
-                {/* Danh sách món ăn theo Category */}
                 <div className="menu-list">
                   {displayItems.map(item => (
                     <div key={item._id} className="menu-item">
@@ -317,35 +305,60 @@ function Reservation() {
                       </div>
                     </div>
                   ))}
-                  {cart.length > 0 && (
-                    <div className="cart-total">Total: {totalCartAmount.toLocaleString()} $</div>
+                  
+                  {/* Tổng bill ở Bước 3 */}
+                  {(cart.length > 0 || tableSurcharge > 0) && (
+                    <div className="cart-total" style={{ borderTop: "1px dashed rgba(255,255,255,0.2)", paddingTop: "10px", marginTop: "10px", textAlign: "right" }}>
+                      {tableSurcharge > 0 && <div style={{ fontSize: "12px", color: "#aaa", marginBottom: "4px" }}>Table Surcharge: {tableSurcharge.toLocaleString()} $</div>}
+                      {cart.length > 0 && <div style={{ fontSize: "12px", color: "#aaa", marginBottom: "4px" }}>Meals Subtotal: {totalMealAmount.toLocaleString()} $</div>}
+                      <div style={{ color: "#D4AF37", fontSize: "16px", marginTop: "8px" }}>Current Total: {grandTotal.toLocaleString()} $</div>
+                    </div>
                   )}
                 </div>
               </div>
 
               <div className="btn-row" style={{ marginTop: '10px' }}>
-                <button type="button" className="btn-outline" style={{ borderColor: "#dc3545", color: "#dc3545" }} onClick={handleCancelProcess}>Cancel Reservation</button>
+                <button type="button" className="btn-outline" style={{ borderColor: "#dc3545", color: "#dc3545" }} onClick={handleCancelProcess}>Cancel</button>
                 <button type="button" className="btn-outline" onClick={() => setStep(2)}>Change Table</button>
                 <button type="button" className="btn-gold" onClick={() => setStep(4)}>Continue</button>
               </div>
             </div>
           )}
 
-          {/* ===== BƯỚC 4 ===== */}
+          {/* ===== BƯỚC 4: XÁC NHẬN TỔNG HÓA ĐƠN ===== */}
           {step === 4 && (
             <form className="step-content" onSubmit={handleSubmitReservation}>
               <h3 style={{ marginBottom: "5px" }}>Confirm & Complete</h3>
 
               <div className="confirm-section" style={{ marginBottom: "10px" }}>
                 <div className="confirm-row"><span>Time:</span> <b>{searchParams.time} - {searchParams.date}</b></div>
-                <div className="confirm-row"><span>Table:</span> <b>Table {bookingInfo.selectedTable?.tableNumber}</b></div>
+                <div className="confirm-row">
+                  <span>Table:</span> 
+                  <b>Table {bookingInfo.selectedTable?.tableNumber} ({bookingInfo.selectedTable?.location || "indoor"})</b>
+                </div>
                 <div className="confirm-row"><span>Guests:</span> <b>{searchParams.guests} people</b></div>
-                {cart.length > 0 && (
-                  <>
-                    <div className="confirm-divider" style={{ height: "1px", background: "rgba(255,255,255,0.1)", margin: "10px 0" }}></div>
-                    <div className="confirm-row total"><span>Total Meal Cost:</span> <b>{totalCartAmount.toLocaleString()} $</b></div>
-                  </>
+                
+                {/* Phần phân rã chi phí */}
+                <div className="confirm-divider" style={{ height: "1px", background: "rgba(255,255,255,0.1)", margin: "12px 0" }}></div>
+                
+                {tableSurcharge > 0 && (
+                  <div className="confirm-row" style={{fontSize: "14px"}}>
+                    <span>Table Surcharge:</span> 
+                    <span>{tableSurcharge.toLocaleString()} $</span>
+                  </div>
                 )}
+                
+                {cart.length > 0 && (
+                  <div className="confirm-row" style={{fontSize: "14px"}}>
+                    <span>Pre-ordered Meals:</span> 
+                    <span>{totalMealAmount.toLocaleString()} $</span>
+                  </div>
+                )}
+
+                <div className="confirm-row total" style={{ marginTop: "8px", paddingTop: "8px", borderTop: "1px dashed rgba(212, 175, 55, 0.4)" }}>
+                  <span>Grand Total:</span> 
+                  <b style={{ color: "#D4AF37", fontSize: "20px" }}>{grandTotal.toLocaleString()} $</b>
+                </div>
               </div>
 
               <div className="form-group">
@@ -370,7 +383,6 @@ function Reservation() {
               </div>
             </form>
           )}
-
         </div>
       </div>
     </>

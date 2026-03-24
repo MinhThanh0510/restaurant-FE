@@ -39,8 +39,7 @@
   transition: 0.3s;
 }
 
-.tab-btn:hover { color: #D4AF37; }
-
+.tab-btn:hover,
 .tab-btn.active {
   color: #D4AF37;
 }
@@ -73,7 +72,10 @@
   cursor: pointer;
   transition: 0.2s;
 }
-.btn-primary:hover { background: #b38f2e; }
+
+.btn-primary:hover {
+  background: #b38f2e;
+}
 
 .btn-secondary {
   background: #f1f2f6;
@@ -84,9 +86,12 @@
   font-weight: 600;
   cursor: pointer;
 }
-.btn-secondary:hover { background: #e2e4e9; }
 
 /* ===== TABLE STYLES ===== */
+.admin-table-container {
+  overflow-x: auto;
+}
+
 .menu-thumbnail {
   width: 60px;
   height: 60px;
@@ -110,10 +115,20 @@
   font-weight: 600;
   transition: 0.2s;
 }
-.btn-icon.edit:hover { background: #f8f9fa; border-color: #007bff; color: #007bff; }
-.btn-icon.delete:hover { background: #fcf0f0; border-color: #dc3545; color: #dc3545; }
 
-/* ===== MODAL FORM STYLES ===== */
+.btn-icon.edit:hover {
+  background: #f8f9fa;
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.btn-icon.delete:hover {
+  background: #fcf0f0;
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+/* ===== MODAL & FORM STYLES ===== */
 .admin-modal-content.large {
   max-width: 700px;
 }
@@ -130,7 +145,10 @@
   gap: 20px;
 }
 
-.input-group { margin-bottom: 18px; }
+.input-group {
+  margin-bottom: 18px;
+}
+
 .input-group label {
   display: block;
   font-size: 14px;
@@ -138,42 +156,38 @@
   color: #444;
   margin-bottom: 8px;
 }
-.req { color: #dc3545; }
 
-/* 🔥 ÉP CHỮ MÀU ĐEN CHO CÁC Ô NHẬP LIỆU */
-.input-group input[type="text"],
-.input-group input[type="number"],
+.req {
+  color: #dc3545;
+}
+
+/* 🔥 INPUT STYLES - FIX LỖI MÀU CHỮ FOCUS */
+.input-group input,
 .input-group select,
-.input-group textarea {
+.input-group textarea,
+.ingredient-row select,
+.ingredient-row input {
   width: 100%;
   padding: 12px 15px;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 14px;
-  font-family: inherit;
   outline: none;
   background: #fafafa;
   transition: 0.2s;
   box-sizing: border-box;
-  color: #333 !important; /* Thêm dòng này: Ép chữ màu xám đen */
+  color: #333 !important; /* Chữ xám đen mặc định */
 }
 
-.input-group input:focus {
-  border-color: #D4AF37;
-  background: white;
-  color: white !important; /* Chữ vẫn đen khi focus */
-}
-
-.input-group select:focus {
-    border-color: #D4AF37;
-  background: white;
-  color: #333 !important; /* Chữ vẫn đen khi focus */
-}
-
-.input-group textarea:focus {
-    border-color: #D4AF37;
-  background: white;
-  color: #333 !important; /* Chữ vẫn đen khi focus */
+.input-group input:focus,
+.input-group select:focus,
+.input-group textarea:focus,
+.ingredient-row select:focus,
+.ingredient-row input:focus {
+  border-color: #D4AF37 !important;
+  background: white !important;
+  color: #333 !important; /* Đảm bảo chữ vẫn đen khi focus trên nền trắng */
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
 }
 
 .checkbox-group label {
@@ -182,37 +196,7 @@
   gap: 10px;
   cursor: pointer;
   font-weight: normal;
-  color: #333; /* Ép màu đen cho chữ ở checkbox */
-}
-
-/* 🔥 ÉP CHỮ MÀU ĐEN CHO Ô NHẬP NGUYÊN LIỆU */
-.ingredient-row select { 
-  flex: 2; padding: 10px; border-radius: 6px; border: 1px solid #ddd; 
-  color: #333 !important; 
-  background: #fafafa;
-}
-.ingredient-row input { 
-  flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ddd; 
-  color: #333 !important; 
-  background: #fafafa;
-}
-
-
-/* ======================================================= */
-/* 🔥 TRỊ LỖI AUTOFILL BỊ ĐEN Ô INPUT Ở TRANG ADMIN SÁNG    */
-/* ======================================================= */
-.admin-modal-content input:-webkit-autofill,
-.admin-modal-content input:-webkit-autofill:hover, 
-.admin-modal-content input:-webkit-autofill:focus, 
-.admin-modal-content input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #fafafa inset !important; /* Nền xám nhạt */
-  -webkit-text-fill-color: #333 !important; /* Chữ màu xám đen */
-  caret-color: #333 !important; /* Con trỏ chuột đen */
-  border: 1px solid #ddd !important;
-}
-
-.admin-modal-content input:-webkit-autofill:focus {
-  border-color: #D4AF37 !important;
+  color: #333;
 }
 
 /* ===== INGREDIENTS DYNAMIC FORM ===== */
@@ -230,7 +214,13 @@
   align-items: center;
   margin-bottom: 15px;
 }
-.ingredients-header label { font-weight: 600; color: #333; margin: 0; font-size: 14px;}
+
+.ingredients-header label {
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  font-size: 14px;
+}
 
 .btn-add-ing {
   background: white;
@@ -242,23 +232,16 @@
   font-size: 13px;
   font-weight: 600;
 }
-.btn-add-ing:hover { background: #007bff; color: white; }
-
-.empty-ing { font-size: 13.5px; color: #888; font-style: italic; margin: 0; }
-
-.ingredients-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
 
 .ingredient-row {
   display: flex;
   gap: 10px;
   align-items: center;
+  margin-bottom: 10px;
 }
-.ingredient-row select { flex: 2; padding: 10px; border-radius: 6px; border: 1px solid #ddd; }
-.ingredient-row input { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ddd; }
+
+.ingredient-row select { flex: 2; }
+.ingredient-row input { flex: 1; }
 
 .btn-remove-ing {
   background: #ffeeee;
@@ -270,9 +253,15 @@
   cursor: pointer;
   font-weight: bold;
 }
-.btn-remove-ing:hover { background: #dc3545; color: white; }
 
-/* MODAL FOOTER BUTTONS */
+/* ===== FOOTER & UTILS ===== */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 20px;
+}
+
 .btn-submit-form {
   background: #D4AF37;
   color: white;
@@ -283,6 +272,7 @@
   font-size: 15px;
   cursor: pointer;
 }
+
 .btn-cancel {
   background: transparent;
   color: #555;
@@ -291,7 +281,7 @@
   cursor: pointer;
 }
 
-/* 🔥 ẨN MŨI TÊN TĂNG GIẢM TRÊN Ô INPUT NUMBER */
+/* Triệt để xóa mũi tên input number */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -300,4 +290,10 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+/* Fix Autofill Chrome */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #fafafa inset !important;
+  -webkit-text-fill-color: #333 !important;
 }
