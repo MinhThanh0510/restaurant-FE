@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import api from "../api";
 import { toast } from "react-toastify";
 import "./AdminReservations.css";
+import { useSearchParams } from "react-router-dom";
 
 function AdminReservations() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [urlQuery, setUrlQuery] = useSearchParams();
   const itemsPerPage = 10;
 
   const [filters, setFilters] = useState({
@@ -25,6 +27,7 @@ function AdminReservations() {
 
   const timeSlots = ["all", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00"];
 
+  // ====== FETCH DATA ======
   const fetchAllReservations = async (isManual = false) => {
     try {
       setLoading(true);
@@ -48,7 +51,19 @@ function AdminReservations() {
     setCurrentPage(1);
   }, [filters]);
 
-  // ====== XỬ LÝ LỌC & SẮP XẾP ======
+  // ====== BẮT TÍN HIỆU TỪ DASHBOARD ======
+  useEffect(() => {
+    const openId = urlQuery.get("id");
+    if (openId && reservations.length > 0) {
+      const targetRes = reservations.find(r => r._id === openId);
+      if (targetRes) {
+        handleViewDetail(targetRes); 
+        setUrlQuery({}); 
+      }
+    }
+  }, [urlQuery, reservations]);
+
+  // ====== FILTER & SORT ======
   const filteredReservations = reservations
     .filter(res => {
       const matchStatus = filters.status === "all" || res.status === filters.status;
@@ -75,7 +90,7 @@ function AdminReservations() {
       return timeB - timeA;
     });
 
-  // ====== PHÂN TRANG ======
+  // ====== PAGINATION ======
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentReservations = filteredReservations.slice(indexOfFirstItem, indexOfLastItem);
@@ -83,7 +98,7 @@ function AdminReservations() {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // ====== MODAL & TRẠNG THÁI ======
+  // ====== MODAL ACTIONS ======
   const handleViewDetail = async (reservation) => {
     setModalData({ isOpen: true, data: reservation, preorders: [], loadingPreorder: true });
     try {
@@ -101,7 +116,7 @@ function AdminReservations() {
     if (window.confirm(`Change status to: ${newStatus.toUpperCase()}?`)) {
       try {
         await api.put(`/reservations/admin/${id}/status`, { status: newStatus });
-        toast.success(`🎉 Status updated to: ${newStatus}`);
+        toast.success(`Status updated to: ${newStatus}`);
         closeModal();
         fetchAllReservations(); 
       } catch (err) {
@@ -113,7 +128,7 @@ function AdminReservations() {
   return (
     <div className="admin-res-wrapper">
       <div className="admin-res-header">
-        <h3>Reservation & Pre-order Management</h3>
+        <h3>Reservation Management</h3>
       </div>
 
       <div className="admin-filters">
@@ -142,16 +157,21 @@ function AdminReservations() {
           <option value="cancelled">Cancelled</option>
         </select>
         <button className="btn-reset" onClick={() => setFilters({search: "", date: "", time: "all", status: "all"})}>
-          Clear
+          Clear Filters
         </button>
         <button className="btn-refresh" onClick={() => fetchAllReservations(true)} disabled={loading}>
-          {loading ? "..." : "🔄 Refresh"}
+          {loading ? (
+            <svg className="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21v-5h5"/></svg>
+          )}
+          Refresh
         </button>
       </div>
 
       <div className="stats-bar">
         Displaying: <b className="text-gold">{filteredReservations.length}</b> reservations 
-        ( <b style={{color: "#dc3545"}}>{filteredReservations.filter(r => r.status === "pending").length}</b> pending )
+        ( <b className="text-danger">{filteredReservations.filter(r => r.status === "pending").length}</b> pending )
         {" "} | Page <b className="text-gold">{currentPage}</b> of {totalPages || 1}
       </div>
 
@@ -185,7 +205,9 @@ function AdminReservations() {
                     </td>
                     <td>{res.tableId?.tableNumber ? `Table ${res.tableId.tableNumber}` : "N/A"}</td>
                     <td><span className={`status-badge status-${res.status}`}>{res.status}</span></td>
-                    <td><button className="btn-view" onClick={() => handleViewDetail(res)}>Details</button></td>
+                    <td>
+                      <button className="btn-small-blue" onClick={() => handleViewDetail(res)}>Details</button>
+                    </td>
                   </tr>
                 ))
               )}
@@ -204,17 +226,19 @@ function AdminReservations() {
         </div>
       )}
 
-      {/* ===== MODAL CHI TIẾT ĐƠN (RESERVATION DETAIL) ===== */}
+      {/* ===== MODAL DETAILS ===== */}
       {modalData.isOpen && modalData.data && (
         <div className="admin-modal-overlay" onClick={(e) => e.target.className === "admin-modal-overlay" && closeModal()}>
           <div className="admin-modal-content">
             <div className="modal-header">
               <h2>Booking: <span className="text-gold">{modalData.data.bookingCode}</span></h2>
-              <button className="btn-close-modal" onClick={closeModal}>✕</button>
+              <button className="btn-close-modal" onClick={closeModal}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
             </div>
+            
             <div className="modal-body">
-              
-              {/* ===== CỘT TRÁI: THÔNG TIN KHÁCH & BÀN ===== */}
+              {/* LEFT COLUMN: INFO */}
               <div className="info-section">
                 <h4>Booking Information</h4>
                 <p><strong>Customer:</strong> {modalData.data.customerInfo?.fullName}</p>
@@ -227,57 +251,48 @@ function AdminReservations() {
                 </p>
                 <div className="divider"></div>
                 <p>
-                  {/* 🔥 Cập nhật hiển thị Table kèm Location */}
                   <strong>Table:</strong> {modalData.data.tableId?.tableNumber ? `Table ${modalData.data.tableId.tableNumber} (${modalData.data.tableId.location || "indoor"})` : "N/A"}
                 </p>
                 <p>
-                  {/* 🔥 Hiển thị Phụ thu bàn nếu có */}
                   <strong>Table Surcharge:</strong> <span className="text-gold">{(modalData.data.tablePrice || 0).toLocaleString()} $</span>
                 </p>
                 <div className="divider"></div>
-                <p><strong>Notes:</strong> <span className="note-text">{modalData.data.note || "No notes"}</span></p>
+                <p><strong>Notes:</strong> <span className="note-text">{modalData.data.note || "No notes provided"}</span></p>
               </div>
 
-              {/* ===== CỘT PHẢI: MÓN ĂN & TỔNG TIỀN ===== */}
+              {/* RIGHT COLUMN: PREORDER */}
               <div className="preorder-section">
                 <h4>Pre-order Menu</h4>
-                {modalData.loadingPreorder ? <p>Loading...</p> : modalData.preorders.length === 0 ? <p className="empty-text">No pre-orders.</p> : (
-                  <>
-                    <ul className="modal-preorder-list">
-                      {modalData.preorders.map((item, idx) => (
-                        <li key={idx} className="modal-preorder-item">
-                          <img src={item.menuId?.image || "https://via.placeholder.com/50"} alt="" />
-                          <div className="item-details">
-                            <span className="item-name">{item.menuId?.name || "Unknown"}</span>
-                            <span className="item-qty">{(item.price || item.menuId?.price || 0).toLocaleString()} $ &times; {item.quantity}</span>
-                          </div>
-                          <span className="item-price">{((item.price || item.menuId?.price || 0) * item.quantity).toLocaleString()} $</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </>
+                {modalData.loadingPreorder ? <p className="text-muted">Loading...</p> : modalData.preorders.length === 0 ? <p className="empty-text">No pre-orders.</p> : (
+                  <ul className="modal-preorder-list">
+                    {modalData.preorders.map((item, idx) => (
+                      <li key={idx} className="modal-preorder-item">
+                        <img src={item.menuId?.image || "https://via.placeholder.com/50"} alt="" />
+                        <div className="item-details">
+                          <span className="item-name">{item.menuId?.name || "Unknown"}</span>
+                          <span className="item-qty">{(item.price || item.menuId?.price || 0).toLocaleString()} $ &times; {item.quantity}</span>
+                        </div>
+                        <span className="item-price">{((item.price || item.menuId?.price || 0) * item.quantity).toLocaleString()} $</span>
+                      </li>
+                    ))}
+                  </ul>
                 )}
                 
-                {/* 🔥 Bảng Tổng kết Chi phí (Summary) */}
-                <div className="modal-total" style={{ borderTop: "2px dashed #ccc", paddingTop: "15px", marginTop: "20px" }}>
-                  
-                  {/* Tính trực tiếp tổng tiền món ăn từ mảng modalData.preorders */}
+                {/* SUMMARY */}
+                <div className="modal-total">
                   {modalData.preorders.length > 0 && (
-                    <div style={{ fontSize: "14px", color: "#666", marginBottom: "5px" }}>
+                    <div className="sub-total">
                       Meals Total: {modalData.preorders.reduce((sum, item) => sum + ((item.price || item.menuId?.price || 0) * item.quantity), 0).toLocaleString()} $
                     </div>
                   )}
-                  
                   {modalData.data.tablePrice > 0 && (
-                    <div style={{ fontSize: "14px", color: "#666", marginBottom: "10px" }}>
+                    <div className="sub-total">
                       Table Surcharge: {(modalData.data.tablePrice).toLocaleString()} $
                     </div>
                   )}
-                  
-                  <div style={{ fontSize: "16px", color: "#333", fontWeight: "bold", marginTop: "10px" }}>
+                  <div className="grand-total">
                     GRAND TOTAL: 
-                    <span style={{ fontSize: "24px", color: "#cda434", marginLeft: "10px" }}>
-                      {/* Cộng trực tiếp Tiền Món Ăn + Tiền Bàn */}
+                    <span>
                       {(
                         modalData.preorders.reduce((sum, item) => sum + ((item.price || item.menuId?.price || 0) * item.quantity), 0) + 
                         (modalData.data.tablePrice || 0)
@@ -286,14 +301,14 @@ function AdminReservations() {
                   </div>
                 </div>
               </div>
-
             </div>
-            <div className="modal-footer">
+
+            <div className="modal-footer-actions">
               <span className={`status-badge status-${modalData.data.status}`}>{modalData.data.status}</span>
               <div className="action-buttons">
-                {modalData.data.status === "pending" && <button className="btn-action confirm" onClick={() => handleUpdateStatus(modalData.data._id, "confirmed")}>Confirm</button>}
-                {modalData.data.status === "confirmed" && <button className="btn-action complete" onClick={() => handleUpdateStatus(modalData.data._id, "completed")}>Done</button>}
-                {(modalData.data.status === "pending" || modalData.data.status === "confirmed") && <button className="btn-action cancel" onClick={() => handleUpdateStatus(modalData.data._id, "cancelled")}>Cancel</button>}
+                {modalData.data.status === "pending" && <button className="btn-action confirm" onClick={() => handleUpdateStatus(modalData.data._id, "confirmed")}>Confirm Booking</button>}
+                {modalData.data.status === "confirmed" && <button className="btn-action complete" onClick={() => handleUpdateStatus(modalData.data._id, "completed")}>Mark as Done</button>}
+                {(modalData.data.status === "pending" || modalData.data.status === "confirmed") && <button className="btn-action cancel" onClick={() => handleUpdateStatus(modalData.data._id, "cancelled")}>Cancel Booking</button>}
               </div>
             </div>
           </div>

@@ -46,7 +46,7 @@
 
 .subtitle {
   font-size: 14px;
-  color: #aaa;
+  color: #D4AF37;
   margin-bottom: 25px;
 }
 
@@ -68,10 +68,13 @@
 
 .input-group label {
   font-size: 13px;
-  color: #D4AF37;
+  color: #D4AF37 !important; /* Màu vàng sang trọng */
+  font-weight: 700 !important; /* In đậm cực đại */
   display: block;
   margin-bottom: 8px;
   margin-left: 2px;
+  text-transform: uppercase; /* Thêm cái này để trông chuyên nghiệp hơn */
+  letter-spacing: 0.5px;
 }
 
 /* ===== PASSWORD WRAPPER ===== */

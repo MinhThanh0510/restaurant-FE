@@ -5,26 +5,25 @@ import "./AdminTables.css";
 
 function AdminTables() {
   const [tables, setTables] = useState([]);
-  const [reservations, setReservations] = useState([]); // 🔥 Thêm state lưu lịch đặt
+  const [reservations, setReservations] = useState([]); 
   const [loading, setLoading] = useState(false);
 
   const [modal, setModal] = useState({ isOpen: false, mode: "add", data: null });
   const [form, setForm] = useState({ 
-  tableNumber: "", 
-  capacity: "", 
-  status: "available",
-  location: "indoor", // 🔥 Thêm mới
-  price: ""           // 🔥 Thêm mới
-});
+    tableNumber: "", 
+    capacity: "", 
+    status: "available",
+    location: "indoor", 
+    price: ""           
+  });
 
-  // 🔥 State cho Modal xem lịch trình (Schedule Detail)
   const [scheduleModal, setScheduleModal] = useState({ 
     isOpen: false, 
     table: null, 
-    date: "" // Mặc định là ngày hôm nay
+    date: "" 
   });
 
-  // ====== FETCH DATA (Lấy cả Bàn và Lịch đặt) ======
+  // ====== FETCH DATA ======
   const fetchData = async (isManual = false) => {
     setLoading(true);
     try {
@@ -49,47 +48,44 @@ function AdminTables() {
     fetchData();
   }, []);
 
-  // ====== XỬ LÝ LỊCH TRÌNH CỦA BÀN (TABLE SCHEDULE) ======
+  // ====== TABLE SCHEDULE ======
   const openSchedule = (table) => {
     setScheduleModal({ ...scheduleModal, isOpen: true, table });
   };
 
-  // Hàm lấy danh sách đặt bàn của Modal
   const getTableBookings = () => {
     if (!scheduleModal.table) return [];
     
     return reservations.filter(res => {
-      // Bỏ qua các đơn đã bị hủy
       if (res.status === "cancelled") return false;
       
       const tableId = res.tableId?._id || res.tableId;
       if (tableId !== scheduleModal.table._id) return false;
 
-      // 🔥 Nếu Admin có chọn ngày thì lọc theo ngày, nếu không thì lấy TẤT CẢ
       if (scheduleModal.date) {
         const resDate = new Date(res.reservationDate).toISOString().split("T")[0];
         return resDate === scheduleModal.date;
       }
       
-      return true; // Trả về tất cả nếu không lọc ngày
-    }).sort((a, b) => new Date(a.startTime) - new Date(b.startTime)); // Sắp xếp theo trình tự thời gian
+      return true; 
+    }).sort((a, b) => new Date(a.startTime) - new Date(b.startTime)); 
   };
 
-  // ====== XỬ LÝ MODAL THÊM/SỬA BÀN ======
+  // ====== CRUD MODAL ======
   const openModal = (mode, table = null) => {
-  if (mode === "edit" && table) {
-    setForm({ 
-      tableNumber: table.tableNumber, 
-      capacity: table.capacity, 
-      status: table.status,
-      location: table.location || "indoor", // 🔥 Thêm mới
-      price: table.price || 0               // 🔥 Thêm mới
-    });
-  } else {
-    setForm({ tableNumber: "", capacity: "", status: "available", location: "indoor", price: "" });
-  }
-  setModal({ isOpen: true, mode, data: table });
-    };
+    if (mode === "edit" && table) {
+      setForm({ 
+        tableNumber: table.tableNumber, 
+        capacity: table.capacity, 
+        status: table.status,
+        location: table.location || "indoor", 
+        price: table.price || 0               
+      });
+    } else {
+      setForm({ tableNumber: "", capacity: "", status: "available", location: "indoor", price: "" });
+    }
+    setModal({ isOpen: true, mode, data: table });
+  };
 
   const closeModal = () => {
     setModal({ isOpen: false, mode: "add", data: null });
@@ -140,9 +136,14 @@ function AdminTables() {
           In Maintenance: <b className={maintenanceCount > 0 ? "text-danger" : "text-success"}>{maintenanceCount}</b>
         </div>
         <div className="btn-group">
-          <button className="btn-primary" onClick={() => openModal("add")}>+ Add New Table</button>
+          <button className="btn-primary" onClick={() => openModal("add")}>Add New Table</button>
           <button className="btn-refresh" onClick={() => fetchData(true)} disabled={loading}>
-            {loading ? "..." : "🔄 Refresh"}
+            {loading ? (
+              <svg className="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21v-5h5"/></svg>
+            )}
+            Refresh
           </button>
         </div>
       </div>
@@ -154,37 +155,35 @@ function AdminTables() {
               <tr>
                 <th>Table Number</th>
                 <th>Capacity</th>
-                <th>Location & Price</th> {/* 🔥 Cột mới */}
+                <th>Location & Price</th>
                 <th>Condition</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {tables.length === 0 ? (
-                <tr><td colSpan="4" className="empty-cell">No tables found.</td></tr>
+                <tr><td colSpan="5" className="empty-cell">No tables found.</td></tr>
               ) : (
                 tables.map(table => (
                   <tr key={table._id} className="table-row">
                     <td><div className="table-badge">Table {table.tableNumber}</div></td>
                     <td className="font-bold">{table.capacity} <span className="text-muted" style={{fontWeight: "normal"}}>persons</span></td>
 
-                    {/* 🔥 Hiển thị Location và Price */}
-      <td>
-        <div style={{ textTransform: "capitalize", fontWeight: "600", color: "#2c3e50" }}>
-          {table.location === 'window' ? '🪟 Window' : table.location === 'outdoor' ? '🌳 Outdoor' : '🏠 Indoor'}
-        </div>
-        <div style={{ fontSize: "13px", color: "#D4AF37", fontWeight: "bold", marginTop: "4px" }}>
-          {table.price > 0 ? `+ ${table.price.toLocaleString()} $` : "Free"}
-        </div>
-      </td>
+                    <td>
+                      <div className="location-text">
+                        {table.location === 'window' ? 'Window' : table.location === 'outdoor' ? 'Outdoor' : 'Indoor'}
+                      </div>
+                      <div className="price-text">
+                        {table.price > 0 ? `+ ${table.price.toLocaleString()} $` : "Free"}
+                      </div>
+                    </td>
 
                     <td><span className={`status-badge status-${table.status}`}>{table.status}</span></td>
                     <td>
                       <div className="action-buttons-sm">
-                        {/* 🔥 Nút Xem lịch trình bàn */}
-                        <button className="btn-icon schedule" onClick={() => openSchedule(table)}>📅 Schedule</button>
-                        <button className="btn-icon edit" onClick={() => openModal("edit", table)}>✏️ Edit</button>
-                        <button className="btn-icon delete" onClick={() => handleDelete(table._id)}>🗑️ Delete</button>
+                        <button className="btn-small-blue" onClick={() => openSchedule(table)}>Schedule</button>
+                        <button className="btn-small-gold" onClick={() => openModal("edit", table)}>Edit</button>
+                        <button className="btn-small-red" onClick={() => handleDelete(table._id)}>Delete</button>
                       </div>
                     </td>
                   </tr>
@@ -195,13 +194,15 @@ function AdminTables() {
         )}
       </div>
 
-      {/* ===== MODAL LỊCH TRÌNH BÀN (SCHEDULE) ===== */}
+      {/* ===== SCHEDULE MODAL ===== */}
       {scheduleModal.isOpen && (
         <div className="admin-modal-overlay" onClick={(e) => e.target.className === "admin-modal-overlay" && setScheduleModal({...scheduleModal, isOpen: false})}>
-          <div className="admin-modal-content small-modal">
+          <div className="admin-modal-content">
             <div className="modal-header">
               <h2>Schedule: <span className="text-gold">Table {scheduleModal.table?.tableNumber}</span></h2>
-              <button className="btn-close-modal" onClick={() => setScheduleModal({...scheduleModal, isOpen: false})}>✕</button>
+              <button className="btn-close-modal" onClick={() => setScheduleModal({...scheduleModal, isOpen: false})}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
             </div>
             
             <div className="modal-body-form">
@@ -214,12 +215,12 @@ function AdminTables() {
                     onChange={(e) => setScheduleModal({...scheduleModal, date: e.target.value})}
                     style={{ flex: 1 }}
                   />
-                  {/* Nút Clear để xóa bộ lọc ngày */}
                   <button 
                     type="button" 
-                    className="btn-secondary" 
+                    className="btn-cancel" 
                     onClick={() => setScheduleModal({...scheduleModal, date: ""})}
                     disabled={!scheduleModal.date}
+                    style={{ border: "1px solid #ddd", padding: "0 15px", borderRadius: "8px" }}
                   >
                     Clear
                   </button>
@@ -251,15 +252,14 @@ function AdminTables() {
                       return (
                         <li key={booking._id} className="timeline-item">
                           <div className="time-block">
-                            {/* 🔥 Hiển thị thêm ngày vì giờ đang xem all dates */}
-                            <span className="time-date" style={{ fontSize: "12px", color: "#D4AF37", marginBottom: "2px" }}>{dateStr}</span>
+                            <span className="time-date">{dateStr}</span>
                             <span className="time-start">{startTimeStr}</span>
                             <span className="time-end">to {endTimeStr}</span>
                           </div>
                           <div className="booking-info">
                             <strong>{booking.customerInfo?.fullName || "Guest"}</strong> ({booking.numberOfGuests} pax)
                             <div className="booking-code">Code: {booking.bookingCode}</div>
-                            <span className={`status-badge status-${booking.status}`} style={{marginTop: "5px", padding: "4px 8px"}}>{booking.status}</span>
+                            <span className={`status-badge status-${booking.status}`} style={{marginTop: "8px", padding: "4px 8px"}}>{booking.status}</span>
                           </div>
                         </li>
                       );
@@ -272,48 +272,47 @@ function AdminTables() {
         </div>
       )}
 
-      {/* ===== MODAL THÊM/SỬA BÀN ===== */}
+      {/* ===== CRUD MODAL ===== */}
       {modal.isOpen && (
         <div className="admin-modal-overlay" onClick={(e) => e.target.className === "admin-modal-overlay" && closeModal()}>
           <div className="admin-modal-content small-modal">
             <div className="modal-header">
               <h2>{modal.mode === "add" ? "Add New Table" : "Edit Table"}</h2>
-              <button className="btn-close-modal" onClick={closeModal}>✕</button>
+              <button className="btn-close-modal" onClick={closeModal}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
             </div>
             
             <form onSubmit={handleSave} className="modal-body-form" autoComplete="off">
               <div className="form-grid-2">
                 <div className="input-group">
-                  <label>Table Number *</label>
+                  <label>Table Number <span className="req">*</span></label>
                   <input type="number" required min="1" value={form.tableNumber} onChange={e => setForm({...form, tableNumber: e.target.value === '' ? '' : Number(e.target.value)})} />
                 </div>
                 <div className="input-group">
-                  <label>Capacity (Seats) *</label>
+                  <label>Capacity (Seats) <span className="req">*</span></label>
                   <input type="number" required min="1" value={form.capacity} onChange={e => setForm({...form, capacity: e.target.value === '' ? '' : Number(e.target.value)})} />
                 </div>
 
-                {/* Thêm khối này ngay bên dưới khối nhập Table Number và Capacity */}
-<div className="form-grid-2">
-  <div className="input-group">
-    <label>Table Location <span className="req">*</span></label>
-    <select value={form.location} onChange={e => setForm({...form, location: e.target.value})}>
-      <option value="indoor">🏠 Indoor (Standard)</option>
-      <option value="window">🪟 Window (Premium View)</option>
-      <option value="outdoor">🌳 Outdoor (Patio/Garden)</option>
-    </select>
-  </div>
-  <div className="input-group">
-    <label>Booking Surcharge ($)</label>
-    <input 
-      type="number" 
-      min="0" 
-      step="any" 
-      value={form.price} 
-      onChange={e => setForm({...form, price: e.target.value === '' ? '' : Number(e.target.value)})} 
-      placeholder="e.g. 5" 
-    />
-  </div>
-</div>
+                <div className="input-group">
+                  <label>Table Location <span className="req">*</span></label>
+                  <select value={form.location} onChange={e => setForm({...form, location: e.target.value})}>
+                    <option value="indoor">Indoor (Standard)</option>
+                    <option value="window">Window (Premium View)</option>
+                    <option value="outdoor">Outdoor (Patio/Garden)</option>
+                  </select>
+                </div>
+                <div className="input-group">
+                  <label>Booking Surcharge ($)</label>
+                  <input 
+                    type="number" 
+                    min="0" 
+                    step="any" 
+                    value={form.price} 
+                    onChange={e => setForm({...form, price: e.target.value === '' ? '' : Number(e.target.value)})} 
+                    placeholder="e.g. 5" 
+                  />
+                </div>
               </div>
 
               {modal.mode === "edit" && (
@@ -328,7 +327,7 @@ function AdminTables() {
 
               <div className="modal-footer">
                 <button type="button" className="btn-cancel" onClick={closeModal}>Cancel</button>
-                <button type="submit" className="btn-submit-form">💾 Save Table</button>
+                <button type="submit" className="btn-submit-form">Save Table</button>
               </div>
             </form>
           </div>

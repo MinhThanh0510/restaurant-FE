@@ -16,6 +16,9 @@ import AdminReservations from "./pages/AdminReservations";
 import AdminMenus from "./pages/AdminMenus";
 import AdminInventory from "./pages/AdminInventory";
 import AdminTables from "./pages/AdminTables"; // 🔥 Import trang Tables mới
+import AdminReviews from "./pages/AdminReviews";
+import AdminDashboard from "./pages/AdminDashboard";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -27,6 +30,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/login" element={<Login />} />
+
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         {/* ================= PROTECTED (CUSTOMER) ================= */}
         <Route
@@ -56,17 +61,13 @@ function App() {
             </ProtectedRoute>
           }
         >
-          {/* Mặc định khi vào /admin sẽ hiển thị trang Dashboard này */}
-          <Route index element={<div style={{ padding: "20px" }}><h2>Dashboard summary (Coming soon...)</h2></div>} />
-          
-          {/* Các trang quản lý chi tiết của Admin */}
+          <Route index element={<AdminDashboard />} />
           <Route path="reservations" element={<AdminReservations />} />
           <Route path="menus" element={<AdminMenus />} />
           <Route path="inventory" element={<AdminInventory />} />
           <Route path="tables" element={<AdminTables />} />
+          <Route path="reviews" element={<AdminReviews />} />
           
-          {/* Các trang sẽ làm tiếp theo (Tạm thời để placeholder) */}
-          <Route path="reviews" element={<div style={{ padding: "20px" }}><h2>Review Management</h2></div>} />
 
         </Route>
 

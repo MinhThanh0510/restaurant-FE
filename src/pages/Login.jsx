@@ -11,18 +11,17 @@ function Login() {
   const [mode, setMode] = useState("login");
   const [loading, setLoading] = useState(false);
 
-  // Form states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
 
-  // Trạng thái ẩn/hiện mật khẩu
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // 🔥 ĐIỀU CHỈNH 1: Kiểm tra role nếu user đã đăng nhập từ trước
+  // 🔥 TRẠM KIỂM SOÁT ĐIỀU HƯỚNG DUY NHẤT
+  // Chỉ cần biến 'user' có dữ liệu, nó sẽ tự động chạy và chuyển trang
   useEffect(() => {
     if (user) {
       if (user.role === "admin") {
@@ -56,18 +55,10 @@ function Login() {
     try {
       if (mode === "login") {
         const res = await api.post("/auth/login", { email, password });
-        login(res.data);
-        alert("🎉 Login successful!");
         
-        // 🔥 ĐIỀU CHỈNH 2: Lấy thông tin user vừa đăng nhập để điều hướng
-        // (Tùy cấu trúc API của bạn, thông thường data user sẽ nằm trong res.data.user hoặc res.data)
-        const loggedInUser = res.data.user || res.data;
+        alert("Login successful!");
         
-        if (loggedInUser?.role === "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/");
-        }
+        login(res.data); 
 
       } else if (mode === "register") {
         if (!isValidPassword(password)) {
@@ -83,12 +74,17 @@ function Login() {
         }
 
         await api.post("/auth/register", { fullName, email, password, phone });
-        alert("🎉 Registration successful! Please login.");
+        alert("Registration successful! Please login.");
         switchMode("login");
 
       } else if (mode === "forgot") {
-        alert(`System has recorded the password recovery request for email: ${email}\n(Email sending feature is currently being developed by the Backend team)`);
-        switchMode("login");
+        try {
+          const res = await api.post("/auth/forgot-password", { email });
+          alert("🎉 " + res.data.message);
+          switchMode("login");
+        } catch (err) {
+          alert(err.response?.data?.message || "Email could not be sent.");
+        }
       }
     } catch (err) {
       alert(err.response?.data?.message || "An error occurred. Please try again.");
@@ -115,7 +111,7 @@ function Login() {
   return (
     <div className="login-wrapper">
       <div className="login-card">
-        <h2>Restaurant System 🍽</h2>
+        <h2>Restaurant System</h2>
         <p className="subtitle">
           {mode === "login" && "Login to continue"}
           {mode === "register" && "Register for a new account"}

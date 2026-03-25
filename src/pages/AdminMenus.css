@@ -1,4 +1,4 @@
-/* ===== TABS & HEADER ===== */
+/* ===== CONTAINER & HEADER ===== */
 .admin-menus-wrapper {
   background: white;
   border-radius: 12px;
@@ -20,6 +20,7 @@
   margin: 0;
 }
 
+/* ===== TABS ===== */
 .admin-tabs {
   display: flex;
   gap: 10px;
@@ -39,261 +40,142 @@
   transition: 0.3s;
 }
 
-.tab-btn:hover,
-.tab-btn.active {
-  color: #D4AF37;
-}
+.tab-btn:hover, .tab-btn.active { color: #D4AF37; }
 
 .tab-btn.active::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: #D4AF37;
-  border-radius: 3px 3px 0 0;
+  content: ""; position: absolute; bottom: -2px; left: 0; width: 100%;
+  height: 3px; background: #D4AF37; border-radius: 3px 3px 0 0;
 }
 
-/* ===== TAB ACTIONS ===== */
+/* ===== BUTTONS & ACTIONS ===== */
 .tab-actions {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
+  display: flex; gap: 15px; margin-bottom: 20px;
 }
 
 .btn-primary {
-  background: #D4AF37;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
+  background: linear-gradient(135deg, #D4AF37, #b38f2e);
+  color: black; border: none; padding: 10px 20px; border-radius: 8px;
+  font-weight: 600; cursor: pointer; transition: 0.2s;
 }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); }
 
-.btn-primary:hover {
-  background: #b38f2e;
+.btn-refresh {
+  display: flex; align-items: center; gap: 8px; background: white; border: 1px solid #e0e0e0;
+  padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; color: #2c3e50;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
 }
+.btn-refresh:hover { border-color: #D4AF37; color: #D4AF37; }
+.btn-refresh svg { width: 16px; height: 16px; }
+.spin-icon { animation: spin 1s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
 
-.btn-secondary {
-  background: #f1f2f6;
-  color: #555;
-  border: 1px solid #ddd;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-}
+/* Nút Action trong bảng */
+.action-buttons-sm { display: flex; gap: 10px; }
 
-/* ===== TABLE STYLES ===== */
-.admin-table-container {
-  overflow-x: auto;
+.btn-small-blue {
+  background: transparent; border: 1px solid #17a2b8; padding: 5px 14px; border-radius: 6px; 
+  font-size: 13px; font-weight: 600; cursor: pointer; color: #17a2b8; transition: 0.2s;
 }
+.btn-small-blue:hover { background: #17a2b8; color: white; }
+
+.btn-small-red {
+  background: transparent; border: 1px solid #dc3545; padding: 5px 14px; border-radius: 6px; 
+  font-size: 13px; font-weight: 600; cursor: pointer; color: #dc3545; transition: 0.2s;
+}
+.btn-small-red:hover { background: #dc3545; color: white; }
+
+/* ===== BẢNG DỮ LIỆU ===== */
+.admin-table-container { overflow-x: auto; }
+.admin-table { width: 100%; border-collapse: collapse; text-align: left; }
+.admin-table th { padding: 15px; background: #f8f9fa; color: #555; font-weight: 600; border-bottom: 2px solid #eee; }
+.admin-table td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
+
+.table-row { transition: 0.2s; }
+.table-row:hover { background: #fffdf7; }
+.font-bold { font-weight: bold; color: #333; }
+.text-gold { color: #cda434; }
+.text-muted { color: #888; font-size: 14px; }
+.empty-cell { text-align: center; padding: 20px; color: #888; font-style: italic; }
 
 .menu-thumbnail {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #eee;
+  width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid #eee;
 }
 
-.action-buttons-sm {
-  display: flex;
-  gap: 8px;
+.status-badge { padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; display: inline-block; }
+.status-visible { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.status-hidden { background: #fbe9e7; color: #d32f2f; border: 1px solid #ffcdd2; }
+
+/* ===== MODAL & FORM ===== */
+.admin-modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 1000;
 }
 
-.btn-icon {
-  background: transparent;
-  border: 1px solid #ddd;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 13px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s;
+.admin-modal-content {
+  background: white; width: 90%; max-width: 500px; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.2); animation: slideDown 0.3s ease;
+}
+.admin-modal-content.large { max-width: 700px; }
+
+.modal-header { padding: 20px 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fafafa; }
+.modal-header h2 { margin: 0; font-size: 20px; }
+
+.btn-close-modal {
+  background: transparent; border: none; color: #888; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; padding: 0;
+}
+.btn-close-modal:hover { color: #dc3545; }
+
+.modal-body-form { padding: 25px; max-height: 75vh; overflow-y: auto; }
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+.input-group { margin-bottom: 18px; }
+.input-group label { display: block; font-size: 14px; font-weight: 600; color: #444; margin-bottom: 8px; }
+.req { color: #dc3545; }
+
+.input-group input, .input-group select, .input-group textarea, .ingredient-row select, .ingredient-row input {
+  width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; outline: none; transition: 0.2s; box-sizing: border-box;
+  background: #fafafa; color: #333; 
+}
+.input-group input:focus, .input-group select:focus, .input-group textarea:focus, .ingredient-row select:focus, .ingredient-row input:focus {
+  border-color: #D4AF37; background: white; box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
 }
 
-.btn-icon.edit:hover {
-  background: #f8f9fa;
-  border-color: #007bff;
-  color: #007bff;
-}
+.checkbox-group label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: normal; color: #333; }
 
-.btn-icon.delete:hover {
-  background: #fcf0f0;
-  border-color: #dc3545;
-  color: #dc3545;
-}
-
-/* ===== MODAL & FORM STYLES ===== */
-.admin-modal-content.large {
-  max-width: 700px;
-}
-
-.modal-body-form {
-  padding: 25px;
-  max-height: 70vh;
-  overflow-y: auto;
-}
-
-.form-grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.input-group {
-  margin-bottom: 18px;
-}
-
-.input-group label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  color: #444;
-  margin-bottom: 8px;
-}
-
-.req {
-  color: #dc3545;
-}
-
-/* 🔥 INPUT STYLES - FIX LỖI MÀU CHỮ FOCUS */
-.input-group input,
-.input-group select,
-.input-group textarea,
-.ingredient-row select,
-.ingredient-row input {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  outline: none;
-  background: #fafafa;
-  transition: 0.2s;
-  box-sizing: border-box;
-  color: #333 !important; /* Chữ xám đen mặc định */
-}
-
-.input-group input:focus,
-.input-group select:focus,
-.input-group textarea:focus,
-.ingredient-row select:focus,
-.ingredient-row input:focus {
-  border-color: #D4AF37 !important;
-  background: white !important;
-  color: #333 !important; /* Đảm bảo chữ vẫn đen khi focus trên nền trắng */
-  box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
-}
-
-.checkbox-group label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  font-weight: normal;
-  color: #333;
-}
-
-/* ===== INGREDIENTS DYNAMIC FORM ===== */
-.ingredients-section {
-  background: #f8f9fa;
-  border: 1px dashed #ccc;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-.ingredients-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.ingredients-header label {
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-  font-size: 14px;
-}
+/* ===== INGREDIENTS SECTION ===== */
+.ingredients-section { background: #f8f9fa; border: 1px dashed #ccc; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+.ingredients-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.ingredients-header label { font-weight: 600; color: #333; margin: 0; font-size: 14px; }
+.empty-ing { color: #888; font-style: italic; font-size: 13px; margin: 0; }
 
 .btn-add-ing {
-  background: white;
-  color: #007bff;
-  border: 1px solid #007bff;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
+  background: white; color: #17a2b8; border: 1px solid #17a2b8; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s;
 }
+.btn-add-ing:hover { background: #17a2b8; color: white; }
 
-.ingredient-row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
+.ingredient-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
 .ingredient-row select { flex: 2; }
 .ingredient-row input { flex: 1; }
 
 .btn-remove-ing {
-  background: #ffeeee;
-  color: #dc3545;
-  border: 1px solid #ffcccc;
-  border-radius: 6px;
-  width: 38px;
-  height: 38px;
-  cursor: pointer;
-  font-weight: bold;
+  background: transparent; color: #dc3545; border: 1px solid #dc3545; border-radius: 6px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s;
 }
+.btn-remove-ing:hover { background: #dc3545; color: white; }
 
-/* ===== FOOTER & UTILS ===== */
-.modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  margin-top: 20px;
-}
+/* ===== FOOTER ===== */
+.modal-footer { display: flex; justify-content: flex-end; gap: 15px; margin-top: 20px; }
 
-.btn-submit-form {
-  background: #D4AF37;
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 15px;
-  cursor: pointer;
+.btn-submit-form { 
+  background: #D4AF37; color: black; border: none; padding: 10px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
 }
+.btn-submit-form:hover { background: #e6c35c; }
 
-.btn-cancel {
-  background: transparent;
-  color: #555;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-}
+.btn-cancel { background: transparent; color: #555; border: none; font-weight: bold; cursor: pointer; }
 
-/* Triệt để xóa mũi tên input number */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type=number] {
-  -moz-appearance: textfield;
-}
+/* Ẩn mũi tên input number */
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
 
 /* Fix Autofill Chrome */
-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #fafafa inset !important;
-  -webkit-text-fill-color: #333 !important;
-}
+input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #fafafa inset !important; -webkit-text-fill-color: #333 !important; }
+input:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 1000px white inset !important; }
+
+@keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
