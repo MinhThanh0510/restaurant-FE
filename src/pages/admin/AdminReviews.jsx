@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import api from "../api";
+import api from "../../api";
 import { toast } from "react-toastify";
 import "./AdminReviews.css";
 
@@ -18,7 +18,7 @@ function AdminReviews() {
       const res = await api.get("/reviews/admin");
       setReviews(res.data.reviews || []);
       setStats({ total: res.data.total, avgRating: res.data.avgRating });
-      
+
       if (isManual) toast.success("Reviews synchronized!");
     } catch (error) {
       toast.error("Failed to load reviews.");
@@ -68,7 +68,7 @@ function AdminReviews() {
   const filteredReviews = reviews.filter(rev => {
     const matchRating = filterRating === "all" || rev.rating === parseInt(filterRating);
     const searchLower = searchTerm.toLowerCase();
-    const matchSearch = !searchTerm || 
+    const matchSearch = !searchTerm ||
       rev.userId?.fullName?.toLowerCase().includes(searchLower) ||
       rev.reservationId?.bookingCode?.toLowerCase().includes(searchLower) ||
       rev.comment?.toLowerCase().includes(searchLower);
@@ -84,16 +84,16 @@ function AdminReviews() {
 
       <div className="admin-rev-actions">
         <div className="filter-group-inline">
-          <input 
-            type="text" 
-            placeholder="Search by customer, booking code, or comment..." 
+          <input
+            type="text"
+            placeholder="Search by customer, booking code, or comment..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="rev-search-input"
           />
-          <select 
-            value={filterRating} 
-            onChange={(e) => setFilterRating(e.target.value)} 
+          <select
+            value={filterRating}
+            onChange={(e) => setFilterRating(e.target.value)}
             className="rev-filter-select"
           >
             <option value="all">All Ratings</option>
@@ -104,19 +104,19 @@ function AdminReviews() {
             <option value="1">1 Star</option>
           </select>
         </div>
-        
+
         <button className="btn-refresh" onClick={() => fetchReviews(true)} disabled={loading}>
           {loading ? (
-            <svg className="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+            <svg className="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></svg>
           ) : (
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21v-5h5"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" /><path d="M16 21v-5h5" /></svg>
           )}
           Refresh
         </button>
       </div>
 
       <div className="stats-bar">
-        Total Reviews: <b className="text-gold">{stats.total}</b> | 
+        Total Reviews: <b className="text-gold">{stats.total}</b> |
         Average Rating: <b className="text-gold">{stats.avgRating} / 5.0 ★</b>
       </div>
 
@@ -138,12 +138,12 @@ function AdminReviews() {
               ) : (
                 filteredReviews.map(rev => (
                   <tr key={rev._id} className={`table-row ${rev.isHidden ? 'row-hidden' : ''}`}>
-                    <td className="text-muted" style={{whiteSpace: "nowrap"}}>
+                    <td className="text-muted" style={{ whiteSpace: "nowrap" }}>
                       {new Date(rev.createdAt).toLocaleDateString("en-GB")}
                     </td>
                     <td>
                       <div className="font-bold">{rev.userId?.fullName || "Deleted User"}</div>
-                      <div className="text-muted" style={{fontSize: "12px", marginTop: "2px"}}>
+                      <div className="text-muted" style={{ fontSize: "12px", marginTop: "2px" }}>
                         Code: {rev.reservationId?.bookingCode || "N/A"}
                       </div>
                     </td>
@@ -158,8 +158,8 @@ function AdminReviews() {
                     </td>
                     <td>
                       <div className="action-buttons-sm">
-                        <button 
-                          className={`btn-small-${rev.isHidden ? "blue" : "gold"}`} 
+                        <button
+                          className={`btn-small-${rev.isHidden ? "blue" : "gold"}`}
                           onClick={() => handleToggleHide(rev._id, rev.isHidden)}
                         >
                           {rev.isHidden ? "Unhide" : "Hide"}

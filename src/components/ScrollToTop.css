@@ -1,0 +1,48 @@
+.scroll-to-top {
+    position: fixed;
+    /* 105px là vị trí hoàn hảo để nằm ngay trên Chatbox (bottom 30px + height 60px + gap 15px) */
+    bottom: 105px;
+    right: 30px;
+    width: 45px;
+    height: 45px;
+    background: rgba(15, 15, 15, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #D4AF37;
+    cursor: pointer;
+    z-index: 9998;
+    /* Nằm dưới z-index của PageLoader và Chatbox */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.scroll-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+    background: #D4AF37;
+    color: black;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+}
+
+.scroll-to-top svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+}
+
+.scroll-to-top:hover svg {
+    transform: translateY(-3px);
+}

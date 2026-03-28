@@ -1,26 +1,26 @@
 import { useState, useEffect } from "react";
-import api from "../api";
+import api from "../../api";
 import { toast } from "react-toastify";
 import "./AdminTables.css";
 
 function AdminTables() {
   const [tables, setTables] = useState([]);
-  const [reservations, setReservations] = useState([]); 
+  const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const [modal, setModal] = useState({ isOpen: false, mode: "add", data: null });
-  const [form, setForm] = useState({ 
-    tableNumber: "", 
-    capacity: "", 
+  const [form, setForm] = useState({
+    tableNumber: "",
+    capacity: "",
     status: "available",
-    location: "indoor", 
-    price: ""           
+    location: "indoor",
+    price: ""
   });
 
-  const [scheduleModal, setScheduleModal] = useState({ 
-    isOpen: false, 
-    table: null, 
-    date: "" 
+  const [scheduleModal, setScheduleModal] = useState({
+    isOpen: false,
+    table: null,
+    date: ""
   });
 
   // ====== FETCH DATA ======
@@ -31,10 +31,10 @@ function AdminTables() {
         api.get("/tables"),
         api.get("/reservations/admin")
       ]);
-      
+
       setTables(tableRes.data.tables || []);
       setReservations(resRes.data.reservations || []);
-      
+
       if (isManual) toast.success("Tables & Schedules synchronized!");
     } catch (error) {
       toast.error("Failed to load data.");
@@ -55,10 +55,10 @@ function AdminTables() {
 
   const getTableBookings = () => {
     if (!scheduleModal.table) return [];
-    
+
     return reservations.filter(res => {
       if (res.status === "cancelled") return false;
-      
+
       const tableId = res.tableId?._id || res.tableId;
       if (tableId !== scheduleModal.table._id) return false;
 
@@ -66,20 +66,20 @@ function AdminTables() {
         const resDate = new Date(res.reservationDate).toISOString().split("T")[0];
         return resDate === scheduleModal.date;
       }
-      
-      return true; 
-    }).sort((a, b) => new Date(a.startTime) - new Date(b.startTime)); 
+
+      return true;
+    }).sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
   };
 
   // ====== CRUD MODAL ======
   const openModal = (mode, table = null) => {
     if (mode === "edit" && table) {
-      setForm({ 
-        tableNumber: table.tableNumber, 
-        capacity: table.capacity, 
+      setForm({
+        tableNumber: table.tableNumber,
+        capacity: table.capacity,
         status: table.status,
-        location: table.location || "indoor", 
-        price: table.price || 0               
+        location: table.location || "indoor",
+        price: table.price || 0
       });
     } else {
       setForm({ tableNumber: "", capacity: "", status: "available", location: "indoor", price: "" });
@@ -131,17 +131,17 @@ function AdminTables() {
 
       <div className="admin-tables-actions">
         <div className="stats-bar">
-          Total Tables: <b className="text-gold">{tables.length}</b> | 
-          Available Capacity: <b className="text-gold">{totalCapacity}</b> seats | 
+          Total Tables: <b className="text-gold">{tables.length}</b> |
+          Available Capacity: <b className="text-gold">{totalCapacity}</b> seats |
           In Maintenance: <b className={maintenanceCount > 0 ? "text-danger" : "text-success"}>{maintenanceCount}</b>
         </div>
         <div className="btn-group">
           <button className="btn-primary" onClick={() => openModal("add")}>Add New Table</button>
           <button className="btn-refresh" onClick={() => fetchData(true)} disabled={loading}>
             {loading ? (
-              <svg className="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+              <svg className="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></svg>
             ) : (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21v-5h5"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" /><path d="M16 21v-5h5" /></svg>
             )}
             Refresh
           </button>
@@ -167,7 +167,7 @@ function AdminTables() {
                 tables.map(table => (
                   <tr key={table._id} className="table-row">
                     <td><div className="table-badge">Table {table.tableNumber}</div></td>
-                    <td className="font-bold">{table.capacity} <span className="text-muted" style={{fontWeight: "normal"}}>persons</span></td>
+                    <td className="font-bold">{table.capacity} <span className="text-muted" style={{ fontWeight: "normal" }}>persons</span></td>
 
                     <td>
                       <div className="location-text">
@@ -196,29 +196,29 @@ function AdminTables() {
 
       {/* ===== SCHEDULE MODAL ===== */}
       {scheduleModal.isOpen && (
-        <div className="admin-modal-overlay" onClick={(e) => e.target.className === "admin-modal-overlay" && setScheduleModal({...scheduleModal, isOpen: false})}>
+        <div className="admin-modal-overlay" onClick={(e) => e.target.className === "admin-modal-overlay" && setScheduleModal({ ...scheduleModal, isOpen: false })}>
           <div className="admin-modal-content">
             <div className="modal-header">
               <h2>Schedule: <span className="text-gold">Table {scheduleModal.table?.tableNumber}</span></h2>
-              <button className="btn-close-modal" onClick={() => setScheduleModal({...scheduleModal, isOpen: false})}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              <button className="btn-close-modal" onClick={() => setScheduleModal({ ...scheduleModal, isOpen: false })}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12" /></svg>
               </button>
             </div>
-            
+
             <div className="modal-body-form">
               <div className="input-group">
                 <label>Filter by Date</label>
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <input 
-                    type="date" 
-                    value={scheduleModal.date} 
-                    onChange={(e) => setScheduleModal({...scheduleModal, date: e.target.value})}
+                  <input
+                    type="date"
+                    value={scheduleModal.date}
+                    onChange={(e) => setScheduleModal({ ...scheduleModal, date: e.target.value })}
                     style={{ flex: 1 }}
                   />
-                  <button 
-                    type="button" 
-                    className="btn-cancel" 
-                    onClick={() => setScheduleModal({...scheduleModal, date: ""})}
+                  <button
+                    type="button"
+                    className="btn-cancel"
+                    onClick={() => setScheduleModal({ ...scheduleModal, date: "" })}
                     disabled={!scheduleModal.date}
                     style={{ border: "1px solid #ddd", padding: "0 15px", borderRadius: "8px" }}
                   >
@@ -229,11 +229,11 @@ function AdminTables() {
 
               <div className="schedule-list">
                 <h4>
-                  {scheduleModal.date 
-                    ? `Bookings on ${new Date(scheduleModal.date).toLocaleDateString("en-GB")}:` 
+                  {scheduleModal.date
+                    ? `Bookings on ${new Date(scheduleModal.date).toLocaleDateString("en-GB")}:`
                     : "All Upcoming & Past Bookings:"}
                 </h4>
-                
+
                 {getTableBookings().length === 0 ? (
                   <div className="empty-schedule">
                     <p>{scheduleModal.date ? "No bookings for this date." : "No bookings found for this table."}</p>
@@ -244,7 +244,7 @@ function AdminTables() {
                     {getTableBookings().map(booking => {
                       const start = new Date(booking.startTime);
                       const end = new Date(start.getTime() + 2.5 * 60 * 60 * 1000);
-                      
+
                       const dateStr = new Date(booking.reservationDate).toLocaleDateString("en-GB");
                       const startTimeStr = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                       const endTimeStr = end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -259,7 +259,7 @@ function AdminTables() {
                           <div className="booking-info">
                             <strong>{booking.customerInfo?.fullName || "Guest"}</strong> ({booking.numberOfGuests} pax)
                             <div className="booking-code">Code: {booking.bookingCode}</div>
-                            <span className={`status-badge status-${booking.status}`} style={{marginTop: "8px", padding: "4px 8px"}}>{booking.status}</span>
+                            <span className={`status-badge status-${booking.status}`} style={{ marginTop: "8px", padding: "4px 8px" }}>{booking.status}</span>
                           </div>
                         </li>
                       );
@@ -279,24 +279,24 @@ function AdminTables() {
             <div className="modal-header">
               <h2>{modal.mode === "add" ? "Add New Table" : "Edit Table"}</h2>
               <button className="btn-close-modal" onClick={closeModal}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12" /></svg>
               </button>
             </div>
-            
+
             <form onSubmit={handleSave} className="modal-body-form" autoComplete="off">
               <div className="form-grid-2">
                 <div className="input-group">
                   <label>Table Number <span className="req">*</span></label>
-                  <input type="number" required min="1" value={form.tableNumber} onChange={e => setForm({...form, tableNumber: e.target.value === '' ? '' : Number(e.target.value)})} />
+                  <input type="number" required min="1" value={form.tableNumber} onChange={e => setForm({ ...form, tableNumber: e.target.value === '' ? '' : Number(e.target.value) })} />
                 </div>
                 <div className="input-group">
                   <label>Capacity (Seats) <span className="req">*</span></label>
-                  <input type="number" required min="1" value={form.capacity} onChange={e => setForm({...form, capacity: e.target.value === '' ? '' : Number(e.target.value)})} />
+                  <input type="number" required min="1" value={form.capacity} onChange={e => setForm({ ...form, capacity: e.target.value === '' ? '' : Number(e.target.value) })} />
                 </div>
 
                 <div className="input-group">
                   <label>Table Location <span className="req">*</span></label>
-                  <select value={form.location} onChange={e => setForm({...form, location: e.target.value})}>
+                  <select value={form.location} onChange={e => setForm({ ...form, location: e.target.value })}>
                     <option value="indoor">Indoor (Standard)</option>
                     <option value="window">Window (Premium View)</option>
                     <option value="outdoor">Outdoor (Patio/Garden)</option>
@@ -304,13 +304,13 @@ function AdminTables() {
                 </div>
                 <div className="input-group">
                   <label>Booking Surcharge ($)</label>
-                  <input 
-                    type="number" 
-                    min="0" 
-                    step="any" 
-                    value={form.price} 
-                    onChange={e => setForm({...form, price: e.target.value === '' ? '' : Number(e.target.value)})} 
-                    placeholder="e.g. 5" 
+                  <input
+                    type="number"
+                    min="0"
+                    step="any"
+                    value={form.price}
+                    onChange={e => setForm({ ...form, price: e.target.value === '' ? '' : Number(e.target.value) })}
+                    placeholder="e.g. 5"
                   />
                 </div>
               </div>
@@ -318,7 +318,7 @@ function AdminTables() {
               {modal.mode === "edit" && (
                 <div className="input-group">
                   <label>Table Condition</label>
-                  <select value={form.status} onChange={e => setForm({...form, status: e.target.value})}>
+                  <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}>
                     <option value="available">Available (In use)</option>
                     <option value="maintenance">Maintenance (Broken/Out of service)</option>
                   </select>

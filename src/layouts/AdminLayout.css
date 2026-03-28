@@ -1,62 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap');
+
 /* ===== KHUNG ADMIN CHÍNH ===== */
 .admin-container {
   display: flex;
   min-height: 100vh;
-  background-color: #f4f7f6; 
+  background-color: #f4f7f6;
   color: #333;
   font-family: 'Inter', sans-serif;
 }
 
 /* ===== SIDEBAR (THANH TRÁI) ===== */
 .admin-sidebar {
-  width: 260px;
-  background-color: #1a1c24; 
-  color: white;
+  width: 270px;
+  background-color: #111827;
+  /* Đen nhám sang trọng hơn */
+  color: #9ca3af;
   display: flex;
   flex-direction: column;
   position: fixed;
   height: 100vh;
-  box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
   z-index: 100;
 }
 
 .admin-sidebar-logo {
-  padding: 20px;
-  font-size: 20px;
+  padding: 25px 20px;
+  font-size: 22px;
   font-weight: 700;
   color: #D4AF37;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   font-family: 'Playfair Display', serif;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .admin-sidebar-logo svg {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
 }
 
 .admin-nav {
   flex: 1;
-  padding: 20px 0;
+  padding: 25px 15px;
+  /* Thêm padding 2 bên để bo góc thẻ */
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
 }
 
 .admin-nav-link {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 25px;
-  color: #a0a5ba;
+  gap: 14px;
+  padding: 14px 20px;
+  color: #9ca3af;
   text-decoration: none;
   font-size: 14.5px;
-  font-weight: 500;
-  transition: 0.3s;
+  font-weight: 600;
+  border-radius: 12px;
+  /* Bo góc thẻ */
+  transition: all 0.2s ease;
+  position: relative;
 }
 
 .nav-icon {
@@ -66,71 +73,103 @@
 }
 
 .nav-icon svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   stroke: currentColor;
 }
 
-.admin-nav-link:hover, .admin-nav-link.active {
-  background-color: rgba(212, 175, 55, 0.1);
+/* Hiệu ứng Hover & Active */
+.admin-nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: white;
+  transform: translateX(4px);
+  /* Trượt nhẹ sang phải */
+}
+
+.admin-nav-link.active {
+  background-color: rgba(212, 175, 55, 0.15);
   color: #D4AF37;
-  border-right: 4px solid #D4AF37;
 }
 
 .admin-nav-link.active .nav-icon {
   color: #D4AF37;
 }
 
+/* ===== BADGE CHẤM ĐỎ (ANIMATION) ===== */
+.chat-badge-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #ef4444;
+  /* Đỏ cảnh báo */
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  animation: pulse-red 1.5s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+@keyframes pulse-red {
+  to {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+}
+
+.nav-text {
+  flex: 1;
+}
+
 /* ===== LOGOUT ===== */
 .admin-logout {
-  padding: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .admin-logout button {
   width: 100%;
-  padding: 10px;
-  background: rgba(220, 53, 69, 0.1);
-  color: #ff4d4f;
-  border: 1px solid rgba(220, 53, 69, 0.3);
-  border-radius: 6px;
+  padding: 14px;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid transparent;
+  border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
-  transition: 0.3s;
+  transition: all 0.2s ease;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .admin-logout button:hover {
-  background: #dc3545;
+  background: #ef4444;
   color: white;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
-/* ===== MAIN CONTENT (PHẦN BÊN PHẢI) ===== */
+/* ===== MAIN CONTENT ===== */
 .admin-main {
   flex: 1;
-  margin-left: 260px; /* Chừa chỗ cho Sidebar fixed */
+  margin-left: 270px;
   display: flex;
   flex-direction: column;
 }
 
 .admin-header {
-  height: 70px;
+  height: 75px;
   background-color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 30px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+  padding: 0 40px;
   position: sticky;
   top: 0;
   z-index: 90;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color, #eaeef2);
 }
 
 .admin-header h2 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #444;
+  font-size: 19px;
+  font-weight: 700;
+  color: #111827;
   margin: 0;
 }
 
@@ -138,25 +177,30 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  font-weight: 500;
-  color: #555;
+  color: #6b7280;
   font-size: 14.5px;
 }
 
+.admin-greeting strong {
+  color: #111827;
+}
+
 .admin-avatar {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   background: linear-gradient(135deg, #D4AF37, #b38f2e);
-  color: black;
-  border-radius: 50%;
+  color: white;
+  border-radius: 12px;
+  /* Đổi thành vuông bo góc cho đồng bộ */
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: bold;
-  font-size: 15px;
+  font-weight: 800;
+  font-size: 16px;
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
 }
 
 .admin-content-area {
-  padding: 30px;
+  padding: 35px 40px;
   flex: 1;
 }

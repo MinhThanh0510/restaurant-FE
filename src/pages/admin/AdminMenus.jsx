@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import api from "../api";
+import api from "../../api";
 import { toast } from "react-toastify";
 import "./AdminMenus.css";
 
@@ -19,6 +19,7 @@ function AdminMenus() {
   });
   const [catForm, setCatForm] = useState({ name: "", description: "" });
 
+  // ====== FETCH DATA ======
   const fetchData = async (isManual = false) => {
     setLoading(true);
     try {
@@ -50,6 +51,7 @@ function AdminMenus() {
     fetchData();
   }, []);
 
+  // ====== CATEGORY ACTIONS ======
   const openCatModal = (mode, category = null) => {
     if (mode === "edit" && category) {
       setCatForm({ name: category.name, description: category.description || "" });
@@ -89,6 +91,7 @@ function AdminMenus() {
     }
   };
 
+  // ====== MENU ITEM ACTIONS ======
   const openMenuModal = (mode, menu = null) => {
     if (mode === "edit" && menu) {
       setMenuForm({
@@ -111,7 +114,7 @@ function AdminMenus() {
       });
     } else {
       setMenuForm({
-        name: "", description: "", price: "", image: "", 
+        name: "", description: "", price: "", image: "",
         categoryId: categories[0]?._id || "", isAvailable: true, ingredients: []
       });
     }
@@ -147,6 +150,7 @@ function AdminMenus() {
     }
   };
 
+  // ====== INGREDIENTS ROW ACTIONS ======
   const handleAddIngredientRow = () => {
     setMenuForm({
       ...menuForm,
@@ -181,15 +185,16 @@ function AdminMenus() {
         </button>
       </div>
 
+      {/* ===== MENU TAB ===== */}
       {activeTab === "menus" && (
         <div className="tab-content">
           <div className="tab-actions">
             <button className="btn-primary" onClick={() => openMenuModal("add")}>Add New Item</button>
             <button className="btn-refresh" onClick={() => fetchData(true)} disabled={loading}>
               {loading ? (
-                <svg className="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                <svg className="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></svg>
               ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21v-5h5"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" /><path d="M16 21v-5h5" /></svg>
               )}
               Refresh
             </button>
@@ -215,13 +220,13 @@ function AdminMenus() {
                     menus.map(menu => (
                       <tr key={menu._id} className="table-row">
                         <td>
-                          <img 
-                            src={menu.image || "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg"} 
-                            alt={menu.name} 
+                          <img
+                            src={menu.image || "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg"}
+                            alt={menu.name}
                             className="menu-thumbnail"
                           />
                         </td>
-                        <td className="font-bold">{menu.name}</td>
+                        <td className="font-bold text-dark">{menu.name}</td>
                         <td>{menu.categoryId?.name || "N/A"}</td>
                         <td className="text-gold font-bold">{menu.price?.toLocaleString()} $</td>
                         <td>
@@ -245,15 +250,16 @@ function AdminMenus() {
         </div>
       )}
 
+      {/* ===== CATEGORIES TAB ===== */}
       {activeTab === "categories" && (
         <div className="tab-content">
           <div className="tab-actions">
             <button className="btn-primary" onClick={() => openCatModal("add")}>Add Category</button>
             <button className="btn-refresh" onClick={() => fetchData(true)} disabled={loading}>
               {loading ? (
-                <svg className="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+                <svg className="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /></svg>
               ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21v-5h5"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" /><path d="M16 21v-5h5" /></svg>
               )}
               Refresh
             </button>
@@ -288,13 +294,14 @@ function AdminMenus() {
         </div>
       )}
 
+      {/* ===== MENU MODAL ===== */}
       {menuModal.isOpen && (
         <div className="admin-modal-overlay" onClick={(e) => e.target.className === "admin-modal-overlay" && setMenuModal({ isOpen: false, mode: 'add', data: null })}>
           <div className="admin-modal-content large">
             <div className="modal-header">
               <h2>{menuModal.mode === "add" ? "Add New Menu Item" : "Edit Menu Item"}</h2>
               <button className="btn-close-modal" onClick={() => setMenuModal({ isOpen: false, mode: 'add', data: null })}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12" /></svg>
               </button>
             </div>
             <form onSubmit={handleSaveMenu} className="modal-body-form">
@@ -331,7 +338,7 @@ function AdminMenus() {
               <div className="ingredients-section">
                 <div className="ingredients-header">
                   <label>Recipe Ingredients</label>
-                  <button type="button" className="btn-add-ing" onClick={handleAddIngredientRow}>+ Add Ingredient</button>
+                  <button type="button" className="btn-add-ing" onClick={handleAddIngredientRow}>Add Ingredient</button>
                 </div>
                 {menuForm.ingredients.length === 0 ? (
                   <p className="empty-ing">No ingredients added yet.</p>
@@ -339,9 +346,9 @@ function AdminMenus() {
                   <div className="ingredients-list">
                     {menuForm.ingredients.map((ing, idx) => (
                       <div key={idx} className="ingredient-row">
-                        <select 
-                          required 
-                          value={ing.ingredientId} 
+                        <select
+                          required
+                          value={ing.ingredientId}
                           onChange={(e) => handleIngredientChange(idx, "ingredientId", e.target.value)}
                         >
                           <option value="" disabled>-- Select --</option>
@@ -349,12 +356,12 @@ function AdminMenus() {
                             <option key={inv._id} value={inv._id}>{inv.name} (Stock: {inv.quantity} {inv.unit})</option>
                           ))}
                         </select>
-                        <input 
-                          type="number" required min="0.1" step="any" placeholder="Qty" 
-                          value={ing.quantity} onChange={(e) => handleIngredientChange(idx, "quantity", Number(e.target.value))} 
+                        <input
+                          type="number" required min="0.1" step="any" placeholder="Qty"
+                          value={ing.quantity} onChange={(e) => handleIngredientChange(idx, "quantity", Number(e.target.value))}
                         />
                         <button type="button" className="btn-remove-ing" onClick={() => handleRemoveIngredientRow(idx)}>
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16"><path d="M18 6L6 18M6 6l12 12" /></svg>
                         </button>
                       </div>
                     ))}
@@ -378,13 +385,14 @@ function AdminMenus() {
         </div>
       )}
 
+      {/* ===== CATEGORY MODAL ===== */}
       {catModal.isOpen && (
         <div className="admin-modal-overlay" onClick={(e) => e.target.className === "admin-modal-overlay" && setCatModal({ isOpen: false, mode: 'add', data: null })}>
           <div className="admin-modal-content">
             <div className="modal-header">
               <h2>{catModal.mode === "add" ? "Add New Category" : "Edit Category"}</h2>
               <button className="btn-close-modal" onClick={() => setCatModal({ isOpen: false, mode: 'add', data: null })}>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20"><path d="M18 6L6 18M6 6l12 12" /></svg>
               </button>
             </div>
             <form onSubmit={handleSaveCategory} className="modal-body-form">

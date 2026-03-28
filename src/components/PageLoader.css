@@ -1,0 +1,57 @@
+.page-loader {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    z-index: 99999;
+    /* Luôn đè lên trên cùng của mọi thứ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    pointer-events: none;
+}
+
+.page-loader.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+}
+
+.loader-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #D4AF37;
+    animation: pulse-glow 0.6s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.loader-logo svg {
+    width: 45px;
+    height: 45px;
+}
+
+.loader-logo span {
+    font-family: 'Playfair Display', serif;
+    font-size: 46px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+@keyframes pulse-glow {
+    0% {
+        opacity: 0.5;
+        filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.1));
+        transform: scale(0.98);
+    }
+
+    100% {
+        opacity: 1;
+        filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.8));
+        transform: scale(1.02);
+    }
+}
